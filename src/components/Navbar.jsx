@@ -8,9 +8,10 @@ export default function Navbar() {
     <nav className="flex items-center justify-between px-8 py-6 bg-gray-900 shadow-2xl">
       {/* Logo */}
       <Link to="/" className="text-xl font-bold flex items-center text-gray-100">
-        <span className="text-gray-100">I</span>
+        {/* <span className="text-gray-100">I</span> */}
+        <span className="text-gray-100">VisionCraft</span>
         <span className="text-blue-500">❤</span>
-        <span className="text-gray-100">IMG</span>
+        
       </Link>
 
       {/* Nav Links */}
