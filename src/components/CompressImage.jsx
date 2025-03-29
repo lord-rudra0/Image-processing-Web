@@ -71,8 +71,8 @@ const CompressImage = () => {
   };
 
   return (
-    <div className="container mx-auto p-8 bg-gray-800 rounded-lg shadow-md text-white">
-      <h2 className="text-2xl font-semibold mb-6">Compress Image</h2>
+    <div className="container mx-auto p-6 bg-gray-800/50 rounded-xl shadow-lg mt-8 mb-8">
+      <h2 className="text-2xl font-semibold mb-6 text-white">Compress Image</h2>
       {error && <div className="text-red-500 mb-4">{error}</div>}
 
       <div className="flex">

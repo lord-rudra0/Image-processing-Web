@@ -1,52 +1,69 @@
 import React, { useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
+
+  const navLinks = [
+    { 
+      title: "MODIFY", 
+      links: [
+        { name: "Compress IMAGE", path: "/compress-image" },
+        { name: "Resize IMAGE", path: "/resize-image" },
+        { name: "Crop IMAGE", path: "/crop-image" }
+      ]
+    },
+    { 
+      title: "CONVERT", 
+      links: [
+        { name: "Convert to JPG", path: "/convert-to-jpg" },
+        { name: "Convert from JPG", path: "/convert-from-jpg" }
+      ]
+    },
+    { 
+      title: "SECURITY", 
+      links: [
+        { name: "Watermark IMAGE", path: "/watermark-image" },
+        { name: "Blur Face", path: "/blur-face" }
+      ]
+    }
+  ];
 
   return (
-    <nav className="bg-gray-900/95 backdrop-blur-sm border-b border-gray-800 fixed w-full z-50">
+    <nav className="bg-gray-900/95 backdrop-blur-sm border-b border-gray-800 fixed w-full z-50 shadow-xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-20">
           <div className="flex items-center">
-            <Link to="/" className="flex-shrink-0">
-              <span className="text-2xl font-bold text-white hover:text-blue-400 transition-colors duration-300">
+            <Link to="/" className="flex-shrink-0 group">
+              <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent hover:from-purple-500 hover:to-blue-400 transition-all duration-500">
                 I❤IMG
               </span>
             </Link>
           </div>
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-8">
-              <div className="relative group">
-                <h4 className="font-semibold text-gray-200 mb-2">MODIFY</h4>
-                <div className="absolute z-10 mt-2 w-48 rounded-lg shadow-lg bg-gray-800/95 backdrop-blur-sm border border-gray-700 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300 ease-out">
+          <div className="hidden md:flex items-center space-x-8">
+            {navLinks.map((section, index) => (
+              <div key={index} className="relative group">
+                <h4 className="font-semibold text-gray-200 hover:text-blue-400 transition-colors duration-300 cursor-pointer py-2 px-3 rounded-lg hover:bg-gray-800/50">
+                  {section.title}
+                </h4>
+                <div className="absolute z-20 mt-2 w-56 origin-top-right rounded-xl shadow-lg bg-gray-800/95 backdrop-blur-sm border border-gray-700 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300 ease-out">
                   <div className="py-2">
-                    <Link to="/resize-image" className="block px-4 py-2 text-gray-400 hover:bg-gray-700/50 hover:text-gray-300 transition-colors duration-200">Resize IMAGE</Link>
-                    <Link to="/crop-image" className="block px-4 py-2 text-gray-400 hover:bg-gray-700/50 hover:text-gray-300 transition-colors duration-200">Crop IMAGE</Link>
+                    {section.links.map((link, idx) => (
+                      <Link
+                        key={idx}
+                        to={link.path}
+                        className={`block px-4 py-3 text-gray-400 hover:bg-gray-700/50 hover:text-gray-300 transition-colors duration-200 ${
+                          location.pathname === link.path ? 'bg-gray-700/50 text-gray-300' : ''
+                        }`}
+                      >
+                        {link.name}
+                      </Link>
+                    ))}
                   </div>
                 </div>
               </div>
-
-              <div className="relative group">
-                <h4 className="font-semibold text-gray-200 mb-2">CONVERT</h4>
-                <div className="absolute z-10 mt-2 w-48 rounded-lg shadow-lg bg-gray-800/95 backdrop-blur-sm border border-gray-700 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300 ease-out">
-                  <div className="py-2">
-                    <Link to="/convert-to-jpg" className="block px-4 py-2 text-gray-400 hover:bg-gray-700/50 hover:text-gray-300 transition-colors duration-200">Convert to JPG</Link>
-                    <Link to="/convert-from-jpg" className="block px-4 py-2 text-gray-400 hover:bg-gray-700/50 hover:text-gray-300 transition-colors duration-200">Convert from JPG</Link>
-                  </div>
-                </div>
-              </div>
-
-              <div className="relative group">
-                <h4 className="font-semibold text-gray-200 mb-2">SECURITY</h4>
-                <div className="absolute z-10 mt-2 w-48 rounded-lg shadow-lg bg-gray-800/95 backdrop-blur-sm border border-gray-700 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300 ease-out">
-                  <div className="py-2">
-                    <Link to="/watermark-image" className="block px-4 py-2 text-gray-400 hover:bg-gray-700/50 hover:text-gray-300 transition-colors duration-200">Watermark IMAGE</Link>
-                    <Link to="/blur-face" className="block px-4 py-2 text-gray-400 hover:bg-gray-700/50 hover:text-gray-300 transition-colors duration-200">Blur Face</Link>
-                  </div>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
           <div className="-mr-2 flex md:hidden">
             <button
@@ -82,23 +99,24 @@ const Navbar = () => {
       </div>
 
       {/* Mobile menu */}
-      <div className={`${isOpen ? 'block' : 'hidden'} md:hidden`}>
-        <div className="px-2 pt-2 pb-3 sm:px-3 space-y-1">
-          <div className="space-y-1">
-            <h4 className="px-3 py-2 text-sm font-medium text-gray-200">MODIFY</h4>
-            <Link to="/resize-image" className="block px-3 py-2 text-gray-400 hover:bg-gray-700/50 hover:text-gray-300 transition-colors duration-200">Resize IMAGE</Link>
-            <Link to="/crop-image" className="block px-3 py-2 text-gray-400 hover:bg-gray-700/50 hover:text-gray-300 transition-colors duration-200">Crop IMAGE</Link>
-          </div>
-          <div className="space-y-1">
-            <h4 className="px-3 py-2 text-sm font-medium text-gray-200">CONVERT</h4>
-            <Link to="/convert-to-jpg" className="block px-3 py-2 text-gray-400 hover:bg-gray-700/50 hover:text-gray-300 transition-colors duration-200">Convert to JPG</Link>
-            <Link to="/convert-from-jpg" className="block px-3 py-2 text-gray-400 hover:bg-gray-700/50 hover:text-gray-300 transition-colors duration-200">Convert from JPG</Link>
-          </div>
-          <div className="space-y-1">
-            <h4 className="px-3 py-2 text-sm font-medium text-gray-200">SECURITY</h4>
-            <Link to="/watermark-image" className="block px-3 py-2 text-gray-400 hover:bg-gray-700/50 hover:text-gray-300 transition-colors duration-200">Watermark IMAGE</Link>
-            <Link to="/blur-face" className="block px-3 py-2 text-gray-400 hover:bg-gray-700/50 hover:text-gray-300 transition-colors duration-200">Blur Face</Link>
-          </div>
+      <div className={`${isOpen ? 'block' : 'hidden'} md:hidden bg-gray-900/95 backdrop-blur-sm border-b border-gray-800`}>
+        <div className="px-2 pt-2 pb-4 space-y-1">
+          {navLinks.map((section, index) => (
+            <div key={index}>
+              <h4 className="px-3 py-2 text-sm font-medium text-gray-200">{section.title}</h4>
+              {section.links.map((link, idx) => (
+                <Link
+                  key={idx}
+                  to={link.path}
+                  className={`block px-4 py-3 text-gray-400 hover:bg-gray-700/50 hover:text-gray-300 transition-colors duration-200 ${
+                    location.pathname === link.path ? 'bg-gray-700/50 text-gray-300' : ''
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              ))}
+            </div>
+          ))}
         </div>
       </div>
     </nav>
