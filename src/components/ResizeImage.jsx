@@ -6,8 +6,13 @@ import { useDropzone } from 'react-dropzone';
 const ResizeImage = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [filename, setFilename] = useState('');
+  const [resizeOption, setResizeOption] = useState('dimensions'); // dimensions, percent, resolution
   const [width, setWidth] = useState(500);
   const [height, setHeight] = useState(500);
+  const [percent, setPercent] = useState(100);
+  const [dpi, setDpi] = useState(72);
+  const [format, setFormat] = useState('jpeg');
+  const [quality, setQuality] = useState(90);
   const [resizedImage, setResizedImage] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -41,12 +46,20 @@ const ResizeImage = () => {
     setError('');
     setLoading(true);
     try {
-      const response = await resizeImage(filename, width, height);
-      if (response && response.success) {
-        setResizedImage(`data:image/jpeg;base64,${response.img}`);
+      let data;
+      if (resizeOption === 'dimensions') {
+        data = await resizeImage(filename, width, height, format, quality);
+      } else if (resizeOption === 'percent') {
+        data = await resizeImage(filename, percent, null, format, quality, 'percent');
+      } else if (resizeOption === 'resolution') {
+        data = await resizeImage(filename, width, height, format, quality, 'resolution', dpi);
+      }
+
+      if (data && data.success) {
+        setResizedImage(`data:image/jpeg;base64,${data.img}`);
       } else {
-        setError(response.error || 'Resize failed');
-        console.error('Resize failed:', response.error);
+        setError(data.error || 'Resize failed');
+        console.error('Resize failed:', data.error);
       }
     } catch (err) {
       setError(err.message || 'Resize failed');
@@ -146,6 +159,127 @@ const ResizeImage = () => {
         </div>
 
         <div className="w-1/2 p-4 flex flex-col justify-start">
+          <div className="mb-4">
+            <label className="block text-gray-300 text-sm font-bold mb-2">
+              Resize Option:
+            </label>
+            <select
+              value={resizeOption}
+              onChange={(e) => setResizeOption(e.target.value)}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
+            >
+              <option value="dimensions">Dimensions</option>
+              <option value="percent">Percent</option>
+              <option value="resolution">Resolution</option>
+            </select>
+          </div>
+
+          {resizeOption === 'dimensions' && (
+            <>
+              <div className="mb-4">
+                <label className="block text-gray-300 text-sm font-bold mb-2">
+                  Width:
+                </label>
+                <input
+                  type="number"
+                  value={width}
+                  onChange={(e) => setWidth(e.target.value)}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-300 text-sm font-bold mb-2">
+                  Height:
+                </label>
+                <input
+                  type="number"
+                  value={height}
+                  onChange={(e) => setHeight(e.target.value)}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
+                />
+              </div>
+            </>
+          )}
+
+          {resizeOption === 'percent' && (
+            <div className="mb-4">
+              <label className="block text-gray-300 text-sm font-bold mb-2">
+                Percent:
+              </label>
+              <input
+                type="number"
+                value={percent}
+                onChange={(e) => setPercent(e.target.value)}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
+              />
+            </div>
+          )}
+
+          {resizeOption === 'resolution' && (
+            <>
+              <div className="mb-4">
+                <label className="block text-gray-300 text-sm font-bold mb-2">
+                  Width:
+                </label>
+                <input
+                  type="number"
+                  value={width}
+                  onChange={(e) => setWidth(e.target.value)}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-300 text-sm font-bold mb-2">
+                  Height:
+                </label>
+                <input
+                  type="number"
+                  value={height}
+                  onChange={(e) => setHeight(e.target.value)}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-300 text-sm font-bold mb-2">
+                  DPI:
+                </label>
+                <input
+                  type="number"
+                  value={dpi}
+                  onChange={(e) => setDpi(e.target.value)}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
+                />
+              </div>
+            </>
+          )}
+
+          <div className="mb-4">
+            <label className="block text-gray-300 text-sm font-bold mb-2">
+              Format:
+            </label>
+            <select
+              value={format}
+              onChange={(e) => setFormat(e.target.value)}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
+            >
+              <option value="jpeg">JPEG</option>
+              <option value="png">PNG</option>
+              <option value="webp">WebP</option>
+            </select>
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-gray-300 text-sm font-bold mb-2">
+              Quality (1-100):
+            </label>
+            <input
+              type="number"
+              value={quality}
+              onChange={(e) => setQuality(Math.max(1, Math.min(100, e.target.value)))}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
+            />
+          </div>
+
           <div className="flex justify-between items-center mb-4">
             <button
               onClick={handleResize}
@@ -164,35 +298,6 @@ const ResizeImage = () => {
                 Download
               </button>
             )}
-          </div>
-
-          <div className="grid grid-cols-2 gap-4 mb-6">
-            <div>
-              <label className="block text-gray-300 text-sm font-bold mb-2" htmlFor="width">
-                Width:
-              </label>
-              <input
-                type="number"
-                id="width"
-                placeholder="Enter width"
-                value={width}
-                onChange={(e) => setWidth(e.target.value)}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
-              />
-            </div>
-            <div>
-              <label className="block text-gray-300 text-sm font-bold mb-2" htmlFor="height">
-                Height:
-              </label>
-              <input
-                type="number"
-                id="height"
-                placeholder="Enter height"
-                value={height}
-                onChange={(e) => setHeight(e.target.value)}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
-              />
-            </div>
           </div>
 
           <label className="inline-flex items-center mt-3">

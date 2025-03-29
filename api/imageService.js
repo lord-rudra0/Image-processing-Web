@@ -32,8 +32,8 @@ export const compressImage = async (filename, quality) => {
     return handleRequest('/api/compress', 'POST', { filename, quality });
 };
 
-export async function resizeImage(filename, width, height) {
-    return handleRequest('/api/resize', 'POST', { filename, width, height });
+export async function resizeImage(filename, width, height, format = 'jpeg', quality = 90, resizeOption = 'dimensions', dpi = 72) {
+    return handleRequest('/api/resize', 'POST', { filename, width, height, format, quality, resizeOption, dpi });
 }
 
 export const cropImage = async (filename, left, top, right, bottom) => {
