@@ -36,9 +36,9 @@ export async function resizeImage(filename, width, height, format = 'jpeg', qual
     return handleRequest('/api/resize', 'POST', { filename, width, height, format, quality, resizeOption, dpi });
 }
 
-export const cropImage = async (filename, left, top, right, bottom) => {
-    return handleRequest('/api/crop', 'POST', { filename: filename, left: left, top: top, right: right, bottom: bottom });
-};
+export async function cropImage(filename, left, top, right, bottom) {
+    return handleRequest('/api/crop', 'POST', { filename, left, top, right, bottom });
+}
 
 export const convertToJpg = async (filename) => {
     return handleRequest('/api/convert-to-jpg', 'POST', { filename: filename });
