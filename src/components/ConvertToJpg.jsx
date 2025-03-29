@@ -5,34 +5,56 @@ const ConvertToJpg = () => {
   const [filename, setFilename] = useState('');
   const [convertedImage, setConvertedImage] = useState(null);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleConvert = async () => {
     setError(''); // Clear previous errors
+    setLoading(true);
     try {
       const data = await convertToJpg(filename);
       setConvertedImage(`data:image/jpeg;base64,${data.image}`);
     } catch (err) {
       setError(err.message || 'Conversion failed');
       console.error('Conversion failed:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-semibold mb-4">Convert to JPG</h2>
-      {error && <div className="text-red-500 mb-2">{error}</div>}
-      <input
-        type="text"
-        placeholder="Filename"
-        value={filename}
-        onChange={(e) => setFilename(e.target.value)}
-        className="border rounded p-2 mb-2 w-full"
-      />
-      <button onClick={handleConvert} className="bg-blue-500 text-white p-2 rounded">
-        Convert
+    <div className="container mx-auto p-8 bg-gray-800 rounded-lg shadow-md text-white">
+      <h2 className="text-2xl font-semibold mb-6">Convert to JPG</h2>
+      {error && <div className="text-red-500 mb-4">{error}</div>}
+
+      <div className="mb-4">
+        <label className="block text-gray-300 text-sm font-bold mb-2" htmlFor="filename">
+          Filename:
+        </label>
+        <input
+          type="text"
+          id="filename"
+          placeholder="Enter filename"
+          value={filename}
+          onChange={(e) => setFilename(e.target.value)}
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
+        />
+      </div>
+
+      <button
+        onClick={handleConvert}
+        className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${
+          loading ? 'opacity-50 cursor-not-allowed' : ''
+        }`}
+        disabled={loading}
+      >
+        {loading ? 'Converting...' : 'Convert'}
       </button>
+
       {convertedImage && (
-        <img src={convertedImage} alt="Converted" className="mt-4 max-w-full" />
+        <div className="mt-8">
+          <h3 className="text-lg font-semibold mb-2">Converted Image:</h3>
+          <img src={convertedImage} alt="Converted" className="max-w-full rounded-lg shadow-md" />
+        </div>
       )}
     </div>
   );
