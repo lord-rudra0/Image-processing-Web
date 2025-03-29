@@ -1,84 +1,108 @@
 import React, { useState } from "react";
 import { Link } from 'react-router-dom';
 
-export default function Navbar() {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+const Navbar = () => {
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="flex items-center justify-between px-8 py-6 bg-gray-900 shadow-2xl">
-      {/* Logo */}
-      <Link to="/" className="text-xl font-bold flex items-center text-gray-100">
-        {/* <span className="text-gray-100">I</span> */}
-        <span className="text-gray-100">VisionCraft</span>
-        <span className="text-blue-500">❤</span>
-        
-      </Link>
+    <nav className="bg-gray-900/95 backdrop-blur-sm border-b border-gray-800 fixed w-full z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          <div className="flex items-center">
+            <Link to="/" className="flex-shrink-0">
+              <span className="text-2xl font-bold text-white hover:text-blue-400 transition-colors duration-300">
+                I❤IMG
+              </span>
+            </Link>
+          </div>
+          <div className="hidden md:block">
+            <div className="ml-10 flex items-baseline space-x-8">
+              <div className="relative group">
+                <h4 className="font-semibold text-gray-200 mb-2">MODIFY</h4>
+                <div className="absolute z-10 mt-2 w-48 rounded-lg shadow-lg bg-gray-800/95 backdrop-blur-sm border border-gray-700 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300 ease-out">
+                  <div className="py-2">
+                    <Link to="/resize-image" className="block px-4 py-2 text-gray-400 hover:bg-gray-700/50 hover:text-gray-300 transition-colors duration-200">Resize IMAGE</Link>
+                    <Link to="/crop-image" className="block px-4 py-2 text-gray-400 hover:bg-gray-700/50 hover:text-gray-300 transition-colors duration-200">Crop IMAGE</Link>
+                  </div>
+                </div>
+              </div>
 
-      {/* Nav Links */}
-      <div className="hidden md:flex space-x-8 text-gray-300 font-medium">
-        <Link to="/compress-image" className="hover:text-gray-200 transition-colors duration-200">COMPRESS IMAGE</Link>
-        <Link to="/resize-image" className="hover:text-gray-200 transition-colors duration-200">RESIZE IMAGE</Link>
-        <Link to="/crop-image" className="hover:text-gray-200 transition-colors duration-200">CROP IMAGE</Link>
-        <Link to="/convert-to-jpg" className="hover:text-gray-200 transition-colors duration-200">CONVERT TO JPG</Link>
-        <Link to="/photo-editor" className="text-blue-500 hover:text-blue-400 transition-colors duration-200">PHOTO EDITOR</Link>
-        {/* <Link to="/upscale-image" className="hover:text-gray-200 transition-colors duration-200">UPSCALE IMAGE</Link>
-        <Link to="/remove-background" className="hover:text-gray-200 transition-colors duration-200">REMOVE BACKGROUND</Link>
-        <Link to="/watermark-image" className="hover:text-gray-200 transition-colors duration-200">WATERMARK IMAGE</Link> */}
+              <div className="relative group">
+                <h4 className="font-semibold text-gray-200 mb-2">CONVERT</h4>
+                <div className="absolute z-10 mt-2 w-48 rounded-lg shadow-lg bg-gray-800/95 backdrop-blur-sm border border-gray-700 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300 ease-out">
+                  <div className="py-2">
+                    <Link to="/convert-to-jpg" className="block px-4 py-2 text-gray-400 hover:bg-gray-700/50 hover:text-gray-300 transition-colors duration-200">Convert to JPG</Link>
+                    <Link to="/convert-from-jpg" className="block px-4 py-2 text-gray-400 hover:bg-gray-700/50 hover:text-gray-300 transition-colors duration-200">Convert from JPG</Link>
+                  </div>
+                </div>
+              </div>
 
-        {/* Dropdown */}
-        <div className="relative">
-          <button
-            onClick={() => setDropdownOpen(!dropdownOpen)}
-            className="focus:outline-none hover:text-gray-200 transition-colors duration-200 flex items-center"
-          >
-            MORE TOOLS ▾
-          </button>
-          {dropdownOpen && (
-            <div className="absolute left-0 mt-2 w-64 bg-gray-800 border border-gray-700 shadow-xl rounded-lg p-4 z-50">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <h4 className="font-semibold text-gray-200 mb-2">OPTIMIZE</h4>
-                  <Link to="/compress-image" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Compress IMAGE</Link>
-                  <Link to="/upscale-image">
-                  <a href="#" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Upscale</a>
-                  </Link>
-                   <Link to="/remove-background">
-                  <a href="#" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Remove background</a>
-                  </Link>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-200 mb-2">CREATE</h4>
-                  {/* <a href="#" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Meme generator</a> */}
-                  <Link to="/photo-editor" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Photo editor</Link>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-200 mb-2">MODIFY</h4>
-                  <Link to="/resize-image" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Resize IMAGE</Link>
-                  <Link to="/crop-image" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Crop IMAGE</Link>
-                  {/* <a href="#" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Rotate IMAGE</a> */}
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-200 mb-2">CONVERT</h4>
-                  <Link to="/convert-to-jpg" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Convert to JPG</Link>
-                  <a href="#" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Convert from JPG</a>
-                  {/* <a href="#" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">HTML to IMAGE</a> */}
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-200 mb-2">SECURITY</h4>
-                  <Link to="/watermark-image" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Watermark IMAGE</Link>
-                  <Link to="/blur-face" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Blur Face</Link>
+              <div className="relative group">
+                <h4 className="font-semibold text-gray-200 mb-2">SECURITY</h4>
+                <div className="absolute z-10 mt-2 w-48 rounded-lg shadow-lg bg-gray-800/95 backdrop-blur-sm border border-gray-700 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300 ease-out">
+                  <div className="py-2">
+                    <Link to="/watermark-image" className="block px-4 py-2 text-gray-400 hover:bg-gray-700/50 hover:text-gray-300 transition-colors duration-200">Watermark IMAGE</Link>
+                    <Link to="/blur-face" className="block px-4 py-2 text-gray-400 hover:bg-gray-700/50 hover:text-gray-300 transition-colors duration-200">Blur Face</Link>
+                  </div>
                 </div>
               </div>
             </div>
-          )}
+          </div>
+          <div className="-mr-2 flex md:hidden">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              type="button"
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none transition duration-150 ease-in-out"
+            >
+              <svg
+                className="h-6 w-6"
+                stroke="currentColor"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                {isOpen ? (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                ) : (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                )}
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Login & Signup */}
-      <div className="flex space-x-6">
-        <a href="#" className="text-gray-300 hover:text-gray-200 transition-colors duration-200">Login</a>
-        <button className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-xl transition-colors duration-200 shadow-md hover:shadow-lg">Sign up</button>
+      {/* Mobile menu */}
+      <div className={`${isOpen ? 'block' : 'hidden'} md:hidden`}>
+        <div className="px-2 pt-2 pb-3 sm:px-3 space-y-1">
+          <div className="space-y-1">
+            <h4 className="px-3 py-2 text-sm font-medium text-gray-200">MODIFY</h4>
+            <Link to="/resize-image" className="block px-3 py-2 text-gray-400 hover:bg-gray-700/50 hover:text-gray-300 transition-colors duration-200">Resize IMAGE</Link>
+            <Link to="/crop-image" className="block px-3 py-2 text-gray-400 hover:bg-gray-700/50 hover:text-gray-300 transition-colors duration-200">Crop IMAGE</Link>
+          </div>
+          <div className="space-y-1">
+            <h4 className="px-3 py-2 text-sm font-medium text-gray-200">CONVERT</h4>
+            <Link to="/convert-to-jpg" className="block px-3 py-2 text-gray-400 hover:bg-gray-700/50 hover:text-gray-300 transition-colors duration-200">Convert to JPG</Link>
+            <Link to="/convert-from-jpg" className="block px-3 py-2 text-gray-400 hover:bg-gray-700/50 hover:text-gray-300 transition-colors duration-200">Convert from JPG</Link>
+          </div>
+          <div className="space-y-1">
+            <h4 className="px-3 py-2 text-sm font-medium text-gray-200">SECURITY</h4>
+            <Link to="/watermark-image" className="block px-3 py-2 text-gray-400 hover:bg-gray-700/50 hover:text-gray-300 transition-colors duration-200">Watermark IMAGE</Link>
+            <Link to="/blur-face" className="block px-3 py-2 text-gray-400 hover:bg-gray-700/50 hover:text-gray-300 transition-colors duration-200">Blur Face</Link>
+          </div>
+        </div>
       </div>
     </nav>
   );
-} 
+};
+
+export default Navbar; 
