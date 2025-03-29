@@ -56,16 +56,16 @@ const ConvertToJpg = () => {
         />
       </div>
 
-      <div className="flex flex-wrap justify-center gap-4 mb-6">
+      <div className="flex justify-center gap-4 mb-6">
         {selectedImage && (
-          <div className="w-full md:w-1/2">
+          <div className="w-1/2">
             <h3 className="text-lg font-semibold mb-2">Uploaded Image:</h3>
             <img src={selectedImage} alt="Uploaded" className="max-w-full rounded-lg shadow-md" />
           </div>
         )}
 
         {convertedImage && (
-          <div className="w-full md:w-1/2">
+          <div className="w-1/2">
             <h3 className="text-lg font-semibold mb-2">Converted Image:</h3>
             <img src={convertedImage} alt="Converted" className="max-w-full rounded-lg shadow-md" />
             <button
