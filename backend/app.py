@@ -252,23 +252,22 @@ def compress():
 def resize_image():
     try:
         data = request.get_json()
-        filename = data.get('filename')
-        width = data.get('width')
-        height = data.get('height')
+        filename = data['filename']
+        width = int(data['width'])
+        height = int(data['height'])
 
-        if not filename or not width or not height:
-            return jsonify({'error': 'Filename, width, and height are required'}), 400
+        result = process_image(filename, 'resize', width=width, height=height)
+        return result
 
-        img_str = process_image(filename, 'resize', {'width': width, 'height': height})
-        return jsonify({'image': img_str, 'message': 'Image resized successfully'}), 200
-
+    except KeyError as e:
+        return jsonify({'success': False, 'error': f'Missing parameter: {str(e)}'}), 400
     except FileNotFoundError:
-        return jsonify({'error': 'Image not found'}), 404
+        return jsonify({'success': False, 'error': 'Image not found'}), 404
     except ValueError as e:
-        return jsonify({'error': str(e)}), 400
+        return jsonify({'success': False, 'error': str(e)}), 400
     except Exception as e:
         print(e)
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 @app.route('/api/crop', methods=['POST'])
 def crop_image():

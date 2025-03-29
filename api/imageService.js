@@ -32,9 +32,9 @@ export const compressImage = async (filename, quality) => {
     return handleRequest('/api/compress', 'POST', { filename, quality });
 };
 
-export const resizeImage = async (filename, width, height) => {
-    return handleRequest('/api/resize', 'POST', { filename: filename, width: width, height: height });
-};
+export async function resizeImage(filename, width, height) {
+    return handleRequest('/api/resize', 'POST', { filename, width, height });
+}
 
 export const cropImage = async (filename, left, top, right, bottom) => {
     return handleRequest('/api/crop', 'POST', { filename: filename, left: left, top: top, right: right, bottom: bottom });
