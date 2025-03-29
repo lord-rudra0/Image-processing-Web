@@ -1,12 +1,15 @@
+import typography from '@tailwindcss/typography';
+import nesting from 'postcss-nesting';
+
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       animation: {
-        'spin-slow': 'spin 3s linear infinite',
-        'fadeIn': 'fadeIn 0.5s ease-in-out',
-        'slideIn': 'slideIn 0.5s ease-out',
+        spinSlow: 'spin 3s linear infinite',
+        fadeIn: 'fadeIn 0.5s ease-in-out',
+        slideIn: 'slideIn 0.5s ease-out',
       },
       keyframes: {
         fadeIn: {
@@ -20,7 +23,5 @@ module.exports = {
       },
     },
   },
-  plugins: [
-    require('@tailwindcss/typography'),
-  ],
+  plugins: [typography, nesting],
 };
