@@ -2,6 +2,7 @@ import React, { useState, useCallback, useRef } from 'react';
 import { uploadImage } from '../api/imageService';
 import downloadImage from '../utils/download';
 import { useDropzone } from 'react-dropzone';
+import { useGesture } from '@use-gesture/react';
 
 const WatermarkImage = () => {
     const [selectedImage, setSelectedImage] = useState(null);
@@ -21,6 +22,10 @@ const WatermarkImage = () => {
     const [y, setY] = useState(0);
     const [width, setWidth] = useState(100);
     const [height, setHeight] = useState(100);
+    const [overlayPosition, setOverlayPosition] = useState({ x: 0, y: 0 });
+    const [overlaySize, setOverlaySize] = useState({ width: 100, height: 100 });
+    const [isDragging, setIsDragging] = useState(false);
+    const [isResizing, setIsResizing] = useState(false);
 
     const onDrop = useCallback(async (acceptedFiles) => {
         const imageFile = acceptedFiles[0];
@@ -68,6 +73,19 @@ const WatermarkImage = () => {
         multiple: false,
     });
 
+    const bind = useGesture({
+        onDrag: ({ offset: [x, y] }) => {
+            setOverlayPosition({ x, y });
+            setX(x);
+            setY(y);
+        },
+        onResize: ({ offset: [width, height] }) => {
+            setOverlaySize({ width, height });
+            setWidth(width);
+            setHeight(height);
+        }
+    });
+
     const handleAddWatermark = async () => {
         setError('');
         setLoading(true);
@@ -112,7 +130,7 @@ const WatermarkImage = () => {
             {error && <div className="text-red-500 mb-4">{error}</div>}
 
             <div className="flex">
-                <div className="w-1/2 flex flex-col items-center">
+                <div className="w-1/2 flex flex-col items-center relative">
                     {!imageUploaded ? (
                         <div
                             {...getRootProps()}
@@ -157,14 +175,38 @@ const WatermarkImage = () => {
                         </div>
                     ) : (
                         selectedImage && (
-                            <div className="mb-4">
-                                <h3 className="text-lg font-semibold mb-2">Uploaded Image:</h3>
+                            <div className="relative">
                                 <img
                                     src={selectedImage}
                                     alt="Uploaded"
                                     className="max-w-full rounded-lg shadow-md transition-opacity duration-300"
                                     ref={imageRef}
                                 />
+                                <div
+                                    {...bind()}
+                                    style={{
+                                        position: 'absolute',
+                                        left: overlayPosition.x,
+                                        top: overlayPosition.y,
+                                        width: overlaySize.width,
+                                        height: overlaySize.height,
+                                        border: '2px dashed #3b82f6',
+                                        cursor: 'move',
+                                        boxSizing: 'border-box',
+                                    }}
+                                >
+                                    <div
+                                        style={{
+                                            position: 'absolute',
+                                            right: -4,
+                                            bottom: -4,
+                                            width: 8,
+                                            height: 8,
+                                            backgroundColor: '#3b82f6',
+                                            cursor: 'se-resize',
+                                        }}
+                                    />
+                                </div>
                             </div>
                         )
                     )}
