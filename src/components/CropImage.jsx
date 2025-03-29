@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { cropImage } from '../api/imageService'; // Import the API function
+import { cropImage, uploadImage } from '../api/imageService';
 
 const CropImage = () => {
+  const [selectedImage, setSelectedImage] = useState(null);
   const [filename, setFilename] = useState('');
   const [left, setLeft] = useState(0);
   const [top, setTop] = useState(0);
@@ -10,6 +11,22 @@ const CropImage = () => {
   const [croppedImage, setCroppedImage] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const handleImageUpload = async (event) => {
+    const imageFile = event.target.files[0];
+    setSelectedImage(URL.createObjectURL(imageFile));
+
+    try {
+      setLoading(true);
+      const data = await uploadImage(imageFile);
+      setFilename(data.filename); // Set the filename from the upload response
+    } catch (err) {
+      setError(err.message || 'Image upload failed');
+      console.error('Image upload failed:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleCrop = async () => {
     setError('');
@@ -31,17 +48,19 @@ const CropImage = () => {
       {error && <div className="text-red-500 mb-4">{error}</div>}
 
       <div className="mb-4">
-        <label className="block text-gray-300 text-sm font-bold mb-2" htmlFor="filename">
-          Filename:
+        <label className="block text-gray-300 text-sm font-bold mb-2" htmlFor="image">
+          Upload Image:
         </label>
         <input
-          type="text"
-          id="filename"
-          placeholder="Enter filename"
-          value={filename}
-          onChange={(e) => setFilename(e.target.value)}
+          type="file"
+          id="image"
+          accept="image/*"
+          onChange={handleImageUpload}
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
         />
+        {selectedImage && (
+          <img src={selectedImage} alt="Uploaded" className="mt-4 max-w-full rounded-lg shadow-md" />
+        )}
       </div>
 
       <div className="grid grid-cols-2 gap-4 mb-6">
@@ -104,7 +123,7 @@ const CropImage = () => {
         className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${
           loading ? 'opacity-50 cursor-not-allowed' : ''
         }`}
-        disabled={loading}
+        disabled={loading || !filename}
       >
         {loading ? 'Cropping...' : 'Crop'}
       </button>
