@@ -60,8 +60,27 @@ const CompressImage = () => {
           onChange={handleImageUpload}
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
         />
+      </div>
+
+      <div className="flex flex-wrap justify-center gap-4 mb-6">
         {selectedImage && (
-          <img src={selectedImage} alt="Uploaded" className="mt-4 max-w-full rounded-lg shadow-md" />
+          <div className="w-full md:w-1/2">
+            <h3 className="text-lg font-semibold mb-2">Uploaded Image:</h3>
+            <img src={selectedImage} alt="Uploaded" className="max-w-full rounded-lg shadow-md" />
+          </div>
+        )}
+
+        {compressedImage && (
+          <div className="w-full md:w-1/2">
+            <h3 className="text-lg font-semibold mb-2">Compressed Image:</h3>
+            <img src={compressedImage} alt="Compressed" className="max-w-full rounded-lg shadow-md" />
+            <button
+              onClick={handleDownload}
+              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4"
+            >
+              Download Compressed Image
+            </button>
+          </div>
         )}
       </div>
 
@@ -88,19 +107,6 @@ const CompressImage = () => {
       >
         {loading ? 'Compressing...' : 'Compress'}
       </button>
-
-      {compressedImage && (
-        <div className="mt-8">
-          <h3 className="text-lg font-semibold mb-2">Compressed Image:</h3>
-          <img src={compressedImage} alt="Compressed" className="max-w-full rounded-lg shadow-md" />
-          <button
-            onClick={handleDownload}
-            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4"
-          >
-            Download Compressed Image
-          </button>
-        </div>
-      )}
     </div>
   );
 };
