@@ -30,7 +30,7 @@ const ResizeImage = () => {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: 'image/*',
+    accept: 'image/*,.png,.jpg,.jpeg,.webp',
     multiple: false,
   });
 
@@ -59,14 +59,55 @@ const ResizeImage = () => {
 
       <div
         {...getRootProps()}
-        className={`mb-4 p-4 border-2 border-dashed rounded-lg cursor-pointer transition-colors duration-300 ${
-          isDragActive ? 'border-blue-500 bg-gray-700' : 'border-gray-500 bg-gray-900'
-        }`}
+        role="presentation"
+        tabIndex={0}
+        className="w-full h-96 border-3 border-dashed rounded-2xl flex flex-col items-center justify-center cursor-pointer transition-all transform hover:scale-[1.02] border-gray-700 hover:border-blue-500 bg-gray-800/50 hover:bg-gray-800/70"
       >
-        <input {...getInputProps()} />
-        <p className="text-center text-gray-400">
-          {isDragActive ? 'Drop the image here...' : 'Drag and drop an image here, or click to select one'}
-        </p>
+        <input
+          {...getInputProps()}
+          accept="image/*,.png,.jpg,.jpeg,.webp"
+          type="file"
+          tabIndex="-1"
+          style={{
+            border: '0px',
+            clip: 'rect(0px, 0px, 0px, 0px)',
+            clipPath: 'inset(50%)',
+            height: '1px',
+            margin: '0px -1px -1px 0px',
+            overflow: 'hidden',
+            padding: '0px',
+            position: 'absolute',
+            width: '1px',
+            whiteSpace: 'nowrap',
+          }}
+        />
+        <div className="text-center p-8">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-image w-16 h-16 mx-auto text-gray-400 mb-6"
+          >
+            <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+            <circle cx="9" cy="9" r="2" />
+            <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+          </svg>
+          <h3 className="text-2xl font-semibold text-gray-200 mb-2">Upload your image</h3>
+          <p className="text-gray-400 mb-6">Drag &amp; drop or click to select</p>
+          <div className="flex items-center justify-center space-x-2 text-sm text-gray-400">
+            <span>Supports:</span>
+            <span className="px-2 py-1 bg-gray-700/50 rounded">.PNG</span>
+            <span className="px-2 py-1 bg-gray-700/50 rounded">.JPG</span>
+            <span className="px-2 py-1 bg-gray-700/50 rounded">.JPEG</span>
+            <span className="px-2 py-1 bg-gray-700/50 rounded">.WebP</span>
+          </div>
+        </div>
       </div>
 
       <div className="flex justify-center gap-4 mb-6">
