@@ -28,13 +28,11 @@ const FilterControls = ({
         {categories.map((category) => (
           <div 
             key={category.name}
-            className="group bg-slate-50 rounded-xl p-5 transition-all duration-300 hover:shadow-md"
+            className="bg-gray-50 rounded-lg p-4 transition-all duration-300 hover:shadow-md"
           >
-            <div className="flex justify-between items-center mb-3">
-              <label className="text-sm font-medium text-slate-700">
-                {category.name}
-              </label>
-            </div>
+            <h3 className="text-lg font-medium text-gray-700 mb-4">
+              {category.name}
+            </h3>
             <div className="space-y-4">
               {category.filters.map((filter) => (
                 <div 
@@ -53,7 +51,7 @@ const FilterControls = ({
                     max={filter.max}
                     value={values[filter.name]}
                     onChange={(e) => onChange(filter.name, e.target.value)}
-                    className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-500 transition-all duration-300 hover:bg-gray-300"
                   />
                 </div>
               ))}

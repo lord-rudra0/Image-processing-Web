@@ -1,6 +1,5 @@
 import React, { useState, useCallback } from 'react';
 import ImageDropzone from './ImageDropzone';
-import FilterControls from './FilterControls';
 import { Slider, Select, Button } from './ui'; // This should now work
 import { filterInfo } from '../constants/filterInfo';
 import FilterInfo from './ui/FilterInfo';
@@ -244,124 +243,180 @@ const ImageEditor = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Main Container */}
-        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
-          <div className="grid lg:grid-cols-5 gap-0">
-            {/* Left Panel - Image Preview */}
-            <div className="lg:col-span-3 p-8 bg-gradient-to-br from-slate-50 to-white">
-              <div className="space-y-6">
-                {/* Image Preview Area */}
-                <div className="aspect-w-16 aspect-h-12 rounded-xl overflow-hidden bg-slate-100">
-                  {image ? (
-                    <div className="relative group">
-                      <img
-                        src={image}
-                        alt="Preview"
-                        className="w-full h-full object-contain transition-all duration-300"
-                        style={{ filter: getCSSFilters() }}
-                      />
-                      <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    </div>
-                  ) : (
-                    <ImageDropzone onImageUpload={handleImageUpload} />
-                  )}
-                </div>
-
-                {/* Action Buttons */}
-                {image && (
-                  <div className="flex gap-4 justify-end">
-                    <button
-                      onClick={resetFilters}
-                      className="px-6 py-2.5 rounded-lg font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 transition-all duration-300 transform hover:scale-105 active:scale-95 flex items-center gap-2"
-                    >
-                      <svg className="w-5 h-5 transition-transform duration-300 hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                      </svg>
-                      Reset
-                    </button>
-                    <button
-                      onClick={handleDownload}
-                      className="px-6 py-2.5 rounded-lg font-medium text-white bg-indigo-500 hover:bg-indigo-600 transition-all duration-300 transform hover:scale-105 active:scale-95 flex items-center gap-2"
-                    >
-                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                      </svg>
-                      Download
-                    </button>
-                  </div>
-                )}
-              </div>
+    <div className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
+        {/* Image Preview Section */}
+        <div className="space-y-6">
+          {image ? (
+            <div className="relative group">
+              <img
+                src={image}
+                alt="Preview"
+                className="w-full h-auto rounded-lg shadow-md transition-transform duration-300 group-hover:scale-[1.02]"
+                style={{ filter: getCSSFilters() }}
+              />
+              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 rounded-lg" />
             </div>
+          ) : (
+            <ImageDropzone
+              onImageUpload={handleImageUpload}
+              className="transform transition-all duration-300 hover:scale-[1.02]"
+            />
+          )}
 
-            {/* Right Panel - Controls */}
-            <div className="lg:col-span-2 border-l border-slate-100">
-              <div className="h-full bg-white p-8">
-                {/* Filter Categories */}
-                <div className="mb-8">
-                  <h2 className="text-xl font-semibold text-slate-800 mb-4">Adjustments</h2>
-                  <div className="flex gap-2 overflow-x-auto pb-2">
-                    {Object.keys(filterTabs).map((tab) => (
-                      <button
-                        key={tab}
-                        onClick={() => setActiveTab(tab)}
-                        className={`
-                          px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-all duration-300
-                          ${activeTab === tab
-                            ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-200'
-                            : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                          }
-                        `}
-                      >
-                        {filterTabs[tab].title}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Active Filter Controls */}
-                <div className="space-y-6">
-                  <FilterControls
-                    filters={filterTabs[activeTab].controls}
-                    values={filterValues}
-                    onChange={handleSliderChange}
-                  />
-
-                  {/* Filter Information Card */}
-                  {selectedFilter && filterInfo[selectedFilter] && (
-                    <div className="bg-slate-50 rounded-xl p-6 animate-fadeIn">
-                      <h3 className="text-lg font-semibold text-slate-800 mb-3">
-                        {filterInfo[selectedFilter].title}
-                      </h3>
-                      <div className="prose prose-slate prose-sm">
-                        <p className="text-slate-600">
-                          {filterInfo[selectedFilter].description}
-                        </p>
-                        {filterInfo[selectedFilter].usage && (
-                          <div className="mt-4">
-                            <h4 className="font-medium text-slate-700">Usage</h4>
-                            <p className="text-slate-600">
-                              {filterInfo[selectedFilter].usage}
-                            </p>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
+          {/* Action Buttons */}
+          <div className="flex gap-4 justify-end">
+            <button
+              onClick={resetFilters}
+              disabled={!image}
+              className={`
+                flex items-center px-4 py-2 rounded-lg font-medium
+                transition-all duration-300 transform
+                ${!image 
+                  ? 'opacity-50 cursor-not-allowed bg-gray-100 text-gray-400'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105 active:scale-95'
+                }
+              `}
+            >
+              <svg 
+                className="w-4 h-4 mr-2 transition-transform duration-300 hover:rotate-180" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Reset Filters
+            </button>
+            
+            <button
+              onClick={handleDownload}
+              disabled={!image}
+              className={`
+                flex items-center px-4 py-2 rounded-lg font-medium
+                transition-all duration-300 transform
+                ${!image 
+                  ? 'opacity-50 cursor-not-allowed bg-blue-100 text-blue-400'
+                  : 'bg-blue-500 text-white hover:bg-blue-600 hover:scale-105 active:scale-95'
+                }
+              `}
+            >
+              <svg 
+                className="w-4 h-4 mr-2 animate-bounce" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              Download
+            </button>
           </div>
+        </div>
+
+        {/* Controls Section */}
+        <div className="space-y-6">
+          {/* Filter Categories */}
+          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+            {Object.keys(filterTabs).map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`
+                  px-4 py-2 rounded-lg font-medium whitespace-nowrap
+                  transition-all duration-300 transform
+                  ${activeTab === tab
+                    ? 'bg-blue-500 text-white scale-105'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105'
+                  }
+                `}
+              >
+                {filterTabs[tab].title}
+              </button>
+            ))}
+          </div>
+
+          {/* Filter Controls */}
+          <div className="bg-gray-50 rounded-xl p-6 transition-all duration-300 hover:shadow-md">
+            {activeTab === 'basic' ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {filterTabs.basic.controls.map(control => (
+                  <div key={control.name} className="space-y-2">
+                    <label className="block text-sm font-medium text-gray-700">
+                      {control.label}
+                    </label>
+                    <Slider
+                      min={control.min}
+                      max={control.max}
+                      value={filterValues[control.name]}
+                      onChange={(value) => handleSliderChange(control.name, value)}
+                    />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {filterTabs[activeTab].buttons.map(button => (
+                  <FilterButton
+                    key={button.name}
+                    onClick={() => {
+                      handleFilterClick(button.name);
+                      applyFilter(activeTab, button.params);
+                    }}
+                    disabled={loading}
+                    filter={button.name}
+                  >
+                    {button.label}
+                  </FilterButton>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Filter Information */}
+          {selectedFilter && filterInfo[selectedFilter] && (
+            <div className="bg-gray-50 rounded-xl p-6 transition-all duration-300 hover:shadow-md animate-fadeIn">
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                {filterInfo[selectedFilter].title}
+              </h3>
+              <p className="text-gray-600 mb-4 leading-relaxed">
+                {filterInfo[selectedFilter].description}
+              </p>
+              {filterInfo[selectedFilter].usage && (
+                <div className="mb-4">
+                  <h4 className="text-sm font-semibold text-gray-700 mb-2">Usage:</h4>
+                  <p className="text-gray-600 leading-relaxed">
+                    {filterInfo[selectedFilter].usage}
+                  </p>
+                </div>
+              )}
+              {filterInfo[selectedFilter].parameters && (
+                <div>
+                  <h4 className="text-sm font-semibold text-gray-700 mb-2">Parameters:</h4>
+                  <ul className="space-y-2">
+                    {Object.entries(filterInfo[selectedFilter].parameters).map(([key, value]) => (
+                      <li 
+                        key={key}
+                        className="flex items-center text-gray-600 bg-white rounded-lg p-3 transition-all duration-300 hover:shadow-sm"
+                      >
+                        <span className="font-medium mr-2">{key}:</span>
+                        <span>{value}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
       {/* Loading Overlay */}
       {loading && (
-        <div className="fixed inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center z-50">
+        <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center backdrop-blur-sm transition-all duration-300">
           <div className="flex flex-col items-center">
-            <div className="w-16 h-16 border-4 border-indigo-200 border-t-indigo-500 rounded-full animate-spin" />
-            <p className="mt-4 text-slate-600 font-medium animate-pulse">Processing...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mb-4"></div>
+            <p className="text-blue-500 font-medium animate-pulse">Processing...</p>
           </div>
         </div>
       )}

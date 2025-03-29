@@ -1,11 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-  ],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       animation: {
+        'spin-slow': 'spin 3s linear infinite',
         'fadeIn': 'fadeIn 0.5s ease-in-out',
         'slideIn': 'slideIn 0.5s ease-out',
       },
@@ -23,6 +22,5 @@ module.exports = {
   },
   plugins: [
     require('@tailwindcss/typography'),
-    require('@tailwindcss/aspect-ratio'),
   ],
 };

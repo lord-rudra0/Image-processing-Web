@@ -9,21 +9,15 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: rgb(241 245 249); /* slate-100 */
+  background: #f1f1f1;
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgb(148 163 184); /* slate-400 */
+  background: #c1c1c1;
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgb(100 116 139); /* slate-500 */
-}
-
-/* For Firefox */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: rgb(148 163 184) rgb(241 245 249);
+  background: #a8a8a8;
 }
