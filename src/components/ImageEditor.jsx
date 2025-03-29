@@ -243,7 +243,7 @@ const ImageEditor = () => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
+    <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
         {/* Image Preview Section */}
         <div className="space-y-6">
@@ -252,10 +252,10 @@ const ImageEditor = () => {
               <img
                 src={image}
                 alt="Preview"
-                className="w-full h-auto rounded-lg shadow-md transition-transform duration-300 group-hover:scale-[1.02]"
+                className="w-full h-auto rounded-lg shadow-md transition-transform duration-300 group-hover:scale-[1.02] border-2 border-white/20"
                 style={{ filter: getCSSFilters() }}
               />
-              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 rounded-lg" />
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-all duration-300 rounded-lg" />
             </div>
           ) : (
             <ImageDropzone
@@ -274,7 +274,7 @@ const ImageEditor = () => {
                 transition-all duration-300 transform
                 ${!image 
                   ? 'opacity-50 cursor-not-allowed bg-gray-100 text-gray-400'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105 active:scale-95'
+                  : 'bg-gradient-to-br from-gray-100 to-gray-200 text-gray-700 hover:from-gray-200 hover:to-gray-300 hover:scale-105 active:scale-95 shadow-sm'
                 }
               `}
             >
@@ -297,10 +297,10 @@ const ImageEditor = () => {
                 transition-all duration-300 transform
                 ${!image 
                   ? 'opacity-50 cursor-not-allowed bg-blue-100 text-blue-400'
-                  : 'bg-blue-500 text-white hover:bg-blue-600 hover:scale-105 active:scale-95'
+                  : 'bg-gradient-to-br from-blue-500 to-indigo-500 text-white hover:from-blue-600 hover:to-indigo-600 hover:scale-105 active:scale-95 shadow-sm'
                 }
               `}
-            >
+              >
               <svg 
                 className="w-4 h-4 mr-2 animate-bounce" 
                 fill="none" 
@@ -317,7 +317,7 @@ const ImageEditor = () => {
         {/* Controls Section */}
         <div className="space-y-6">
           {/* Filter Categories */}
-          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+          <div className="flex gap-2 overflow-x-auto pb-2">
             {Object.keys(filterTabs).map((tab) => (
               <button
                 key={tab}
@@ -326,8 +326,8 @@ const ImageEditor = () => {
                   px-4 py-2 rounded-lg font-medium whitespace-nowrap
                   transition-all duration-300 transform
                   ${activeTab === tab
-                    ? 'bg-blue-500 text-white scale-105'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105'
+                    ? 'bg-gradient-to-br from-blue-500 to-indigo-500 text-white scale-105 shadow-sm'
+                    : 'bg-gradient-to-br from-gray-100 to-gray-200 text-gray-700 hover:from-gray-200 hover:to-gray-300 hover:scale-105 shadow-sm'
                   }
                 `}
               >
@@ -337,7 +337,7 @@ const ImageEditor = () => {
           </div>
 
           {/* Filter Controls */}
-          <div className="bg-gray-50 rounded-xl p-6 transition-all duration-300 hover:shadow-md">
+          <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6 transition-all duration-300 hover:shadow-md border border-white/20">
             {activeTab === 'basic' ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {filterTabs.basic.controls.map(control => (
@@ -375,7 +375,7 @@ const ImageEditor = () => {
 
           {/* Filter Information */}
           {selectedFilter && filterInfo[selectedFilter] && (
-            <div className="bg-gray-50 rounded-xl p-6 transition-all duration-300 hover:shadow-md animate-fadeIn">
+            <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6 transition-all duration-300 hover:shadow-md animate-fadeIn border border-white/20">
               <h3 className="text-lg font-semibold text-gray-900 mb-3">
                 {filterInfo[selectedFilter].title}
               </h3>
@@ -397,7 +397,7 @@ const ImageEditor = () => {
                     {Object.entries(filterInfo[selectedFilter].parameters).map(([key, value]) => (
                       <li 
                         key={key}
-                        className="flex items-center text-gray-600 bg-white rounded-lg p-3 transition-all duration-300 hover:shadow-sm"
+                        className="flex items-center text-gray-600 bg-white/50 rounded-lg p-3 transition-all duration-300 hover:shadow-sm backdrop-blur-sm"
                       >
                         <span className="font-medium mr-2">{key}:</span>
                         <span>{value}</span>
@@ -413,7 +413,7 @@ const ImageEditor = () => {
 
       {/* Loading Overlay */}
       {loading && (
-        <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center backdrop-blur-sm transition-all duration-300">
+        <div className="absolute inset-0 bg-white/75 flex items-center justify-center backdrop-blur-sm transition-all duration-300">
           <div className="flex flex-col items-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mb-4"></div>
             <p className="text-blue-500 font-medium animate-pulse">Processing...</p>
