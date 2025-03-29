@@ -299,6 +299,36 @@ const ImageEditor = () => {
             )}
           </div>
 
+          {/* Add this section for filter information display */}
+          {selectedFilter && filterInfo[selectedFilter] && (
+            <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                {filterInfo[selectedFilter].title}
+              </h3>
+              <p className="text-gray-600 mb-3">
+                {filterInfo[selectedFilter].description}
+              </p>
+              {filterInfo[selectedFilter].usage && (
+                <div className="mb-3">
+                  <h4 className="text-sm font-semibold text-gray-700">Usage:</h4>
+                  <p className="text-gray-600">{filterInfo[selectedFilter].usage}</p>
+                </div>
+              )}
+              {filterInfo[selectedFilter].parameters && (
+                <div>
+                  <h4 className="text-sm font-semibold text-gray-700">Parameters:</h4>
+                  <ul className="list-disc list-inside text-gray-600">
+                    {Object.entries(filterInfo[selectedFilter].parameters).map(([key, value]) => (
+                      <li key={key} className="ml-2">
+                        <span className="font-medium">{key}:</span> {value}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Loading Indicator */}
           {loading && (
             <div className="mt-4 flex items-center justify-center text-blue-500">
@@ -312,11 +342,11 @@ const ImageEditor = () => {
         </div>
       </div>
 
-      <FilterInfo 
+      {/* <FilterInfo 
         isOpen={selectedFilter !== null}
         onClose={() => setSelectedFilter(null)}
         filterInfo={selectedFilter && filterInfo[selectedFilter] ? filterInfo[selectedFilter] : null}
-      />
+      /> */}
     </div>
   );
 };
