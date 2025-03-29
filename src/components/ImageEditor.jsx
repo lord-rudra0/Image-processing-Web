@@ -1,6 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import ImageDropzone from './ImageDropzone';
 import { Slider, Select, Button } from './ui'; // This should now work
+import { filterInfo } from '../constants/filterInfo';
+import FilterInfo from './ui/FilterInfo';
 
 const TabButton = ({ active, onClick, children }) => (
   <button
@@ -10,21 +12,6 @@ const TabButton = ({ active, onClick, children }) => (
       ${active 
         ? 'bg-blue-500 text-white shadow-md transform scale-105' 
         : 'bg-white text-gray-600 hover:bg-gray-50 hover:text-gray-900'}
-    `}
-  >
-    {children}
-  </button>
-);
-
-const FilterButton = ({ onClick, disabled, children }) => (
-  <button
-    onClick={onClick}
-    disabled={disabled}
-    className={`
-      m-1 px-4 py-2 rounded-lg font-medium transition-all duration-200
-      ${disabled 
-        ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-        : 'bg-blue-500 text-white hover:bg-blue-600 active:transform active:scale-95'}
     `}
   >
     {children}
@@ -77,6 +64,7 @@ const ImageEditor = () => {
     kernelSize: 5,
     strength: 0.5,
   });
+  const [selectedFilter, setSelectedFilter] = useState(null);
 
   const applyFilter = async (filterType, params) => {
     try {
@@ -198,6 +186,28 @@ const ImageEditor = () => {
     reader.readAsDataURL(file);
   }, []);
 
+  const handleFilterClick = (filterName) => {
+    setSelectedFilter(filterName);
+  };
+
+  const FilterButton = ({ onClick, disabled, filter, children }) => (
+    <button
+      onClick={() => {
+        handleFilterClick(filter);
+        onClick(filter);
+      }}
+      disabled={disabled}
+      className={`
+        m-1 px-4 py-2 rounded-lg font-medium transition-all duration-200
+        ${disabled 
+          ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+          : 'bg-blue-500 text-white hover:bg-blue-600 active:transform active:scale-95'}
+      `}
+    >
+      {children}
+    </button>
+  );
+
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden">
       <div className="grid grid-cols-1 lg:grid-cols-2">
@@ -275,8 +285,12 @@ const ImageEditor = () => {
                 {filterTabs[activeTab].buttons.map(button => (
                   <FilterButton
                     key={button.name}
-                    onClick={() => applyFilter(activeTab, button.params)}
+                    onClick={() => {
+                      handleFilterClick(button.name);
+                      applyFilter(activeTab, button.params);
+                    }}
                     disabled={loading}
+                    filter={button.name}
                   >
                     {button.label}
                   </FilterButton>
@@ -297,6 +311,12 @@ const ImageEditor = () => {
           )}
         </div>
       </div>
+
+      <FilterInfo 
+        isOpen={selectedFilter !== null}
+        onClose={() => setSelectedFilter(null)}
+        filterInfo={selectedFilter && filterInfo[selectedFilter] ? filterInfo[selectedFilter] : null}
+      />
     </div>
   );
 };

@@ -49,5 +49,71 @@ export const filterInfo = {
       'Edge Threshold': 'Sensitivity of edge detection'
     }
   },
-  // Add more filter information...
+  // Add missing filters
+  saturation: {
+    title: 'Saturation Filter',
+    description: 'Adjusts the intensity of colors in the image.',
+    usage: 'Use the slider to increase or decrease color intensity. Values above 100% make colors more vibrant, below 100% make them more muted.',
+    parameters: {
+      'Range': '0-200%',
+      'Default': '100%'
+    }
+  },
+  
+  gaussian: {
+    title: 'Gaussian Blur',
+    description: 'Applies a smooth blur effect.',
+    usage: 'Use for general noise reduction and smoothing.',
+    parameters: {
+      'Kernel Size': 'Controls blur intensity',
+      'Sigma': 'Controls spread of blur'
+    }
+  },
+
+  median: {
+    title: 'Median Filter',
+    description: 'Removes noise while preserving edges.',
+    usage: 'Best for removing salt-and-pepper noise.',
+    parameters: {
+      'Kernel Size': 'Controls filter strength'
+    }
+  },
+
+  bilateral: {
+    title: 'Bilateral Filter',
+    description: 'Edge-preserving noise reduction.',
+    usage: 'Smooths images while preserving important edges.',
+    parameters: {
+      'Sigma': 'Controls filter intensity'
+    }
+  },
+
+  watercolor: {
+    title: 'Watercolor Effect',
+    description: 'Creates a watercolor painting effect.',
+    usage: 'Artistic filter for photo stylization.',
+    parameters: {
+      'Strength': 'Controls effect intensity'
+    }
+  },
+
+  oil_painting: {
+    title: 'Oil Painting',
+    description: 'Creates an oil painting effect.',
+    usage: 'Artistic filter for photo stylization.',
+    parameters: {
+      'Strength': 'Controls effect intensity'
+    }
+  },
+
+  pixelate: {
+    title: 'Pixelate',
+    description: 'Creates a pixelated effect.',
+    usage: 'Reduces image to visible pixels.',
+    parameters: {
+      'Size': 'Controls pixel size'
+    }
+  },
+
+  // Add other filters as needed...
 }; 
