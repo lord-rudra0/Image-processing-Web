@@ -13,16 +13,23 @@ const ResizeImage = () => {
   const [loading, setLoading] = useState(false);
   const [imageUploaded, setImageUploaded] = useState(false);
   const [showImage, setShowImage] = useState(false); // New state for toggling image visibility
+  const [originalSize, setOriginalSize] = useState(null);
+  const [resizedSize, setResizedSize] = useState(null);
+  const [savedPercentage, setSavedPercentage] = useState(null);
+  const [showSizeComparison, setShowSizeComparison] = useState(false);
 
   const onDrop = useCallback(async (acceptedFiles) => {
     const imageFile = acceptedFiles[0];
     setSelectedImage(URL.createObjectURL(imageFile));
+    setFilename(imageFile.name);
+    setOriginalSize(imageFile.size); // Store original size
+    setShowSizeComparison(false); // Hide previous comparison
+    setImageUploaded(true);
 
     try {
       setLoading(true);
       const data = await uploadImage(imageFile);
       setFilename(data.filename); // Set the filename from the upload response
-      setImageUploaded(true); // Set imageUploaded to true after successful upload
     } catch (err) {
       setError(err.message || 'Image upload failed');
       console.error('Image upload failed:', err);
@@ -41,18 +48,47 @@ const ResizeImage = () => {
     setError('');
     setLoading(true);
     try {
-      const data = await resizeImage(filename, width, height);
-      setResizedImage(`data:image/jpeg;base64,${data.image}`);
+      const formData = new FormData();
+      formData.append('image', selectedImage);
+      formData.append('filename', filename);
+      formData.append('width', width);
+      formData.append('height', height);
+
+      const response = await resizeImage(formData);
+
+      if (response.error) {
+        setError(response.error);
+        setLoading(false);
+        return;
+      }
+
+      setResizedImage(response.processedImage);
+
+      // Calculate and set the resized size
+      const resizedImageSize = atob(response.processedImage.split(',')[1]).length;
+      setResizedSize(resizedImageSize);
+
+      // Calculate and set the saved percentage
+      const percentageSaved = ((originalSize - resizedImageSize) / originalSize) * 100;
+      setSavedPercentage(percentageSaved.toFixed(2));
+
+      setShowSizeComparison(true);
+      setLoading(false);
     } catch (err) {
-      setError(err.message || 'Resize failed');
-      console.error('Resize failed:', err);
-    } finally {
+      setError('An error occurred during image resizing.');
       setLoading(false);
     }
   };
 
   const handleDownload = () => {
-    downloadImage(resizedImage, 'resized_image.jpg');
+    if (resizedImage) {
+      const link = document.createElement('a');
+      link.href = resizedImage;
+      link.download = `resized_${filename}`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
   };
 
   return (
@@ -199,6 +235,20 @@ const ResizeImage = () => {
             />
             <span className="ml-2 text-gray-300">Show Resized Image</span>
           </label>
+
+          {showSizeComparison && (
+            <div className="mt-4">
+              <p className="text-green-500">
+                Saved {savedPercentage}%
+              </p>
+              <p>
+                Your Images are now {savedPercentage}% smaller!
+              </p>
+              <p>
+                {originalSize && (originalSize / 1024).toFixed(2)} KB → {(resizedSize / 1024).toFixed(2)} KB
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>

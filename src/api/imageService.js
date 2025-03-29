@@ -47,12 +47,44 @@ export const uploadImage = async (imageFile) => {
   }
 };
 
-export const compressImage = (filename, quality) => {
-  return handleRequest(`${API_URL}/compress`, 'POST', { filename, quality });
+export const compressImage = async (formData) => {
+  try {
+    const response = await fetch(`${API_URL}/compress`, {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return { error: errorData.message || 'Failed to compress image' };
+    }
+
+    const data = await response.json();
+    return data; // Return the entire data object
+  } catch (error) {
+    console.error('Error compressing image:', error);
+    return { error: 'Failed to compress image' };
+  }
 };
 
-export const resizeImage = (filename, width, height) => {
-  return handleRequest(`${API_URL}/resize`, 'POST', { filename, width, height });
+export const resizeImage = async (formData) => {
+  try {
+    const response = await fetch(`${API_URL}/resize`, {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return { error: errorData.message || 'Failed to resize image' };
+    }
+
+    const data = await response.json();
+    return data; // Return the entire data object
+  } catch (error) {
+    console.error('Error resizing image:', error);
+    return { error: 'Failed to resize image' };
+  }
 };
 
 export const cropImage = (filename, left, top, right, bottom) => {

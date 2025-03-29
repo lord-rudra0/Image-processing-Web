@@ -12,16 +12,23 @@ const CompressImage = () => {
   const [loading, setLoading] = useState(false);
   const [imageUploaded, setImageUploaded] = useState(false);
   const [showImage, setShowImage] = useState(false);
+  const [originalSize, setOriginalSize] = useState(null);
+  const [compressedSize, setCompressedSize] = useState(null);
+  const [savedPercentage, setSavedPercentage] = useState(null);
+  const [showSizeComparison, setShowSizeComparison] = useState(false);
 
   const onDrop = useCallback(async (acceptedFiles) => {
     const imageFile = acceptedFiles[0];
     setSelectedImage(URL.createObjectURL(imageFile));
+    setFilename(imageFile.name);
+    setOriginalSize(imageFile.size);
+    setShowSizeComparison(false);
+    setImageUploaded(true);
 
     try {
       setLoading(true);
       const data = await uploadImage(imageFile);
-      setFilename(data.filename); // Set the filename from the upload response
-      setImageUploaded(true); // Set imageUploaded to true after successful upload
+      setFilename(data.filename);
     } catch (err) {
       setError(err.message || 'Image upload failed');
       console.error('Image upload failed:', err);
@@ -40,18 +47,37 @@ const CompressImage = () => {
     setError('');
     setLoading(true);
     try {
-      const data = await compressImage(filename, quality);
-      setCompressedImage(`data:image/jpeg;base64,${data.image}`);
+      const formData = new FormData();
+      formData.append('image', selectedImage);
+      formData.append('filename', filename);
+      formData.append('quality', quality);
+
+      const response = await compressImage(formData);
+
+      if (response.error) {
+        setError(response.error);
+        setLoading(false);
+        return;
+      }
+
+      setCompressedImage(response.processedImage);
+
+      const compressedImageSize = atob(response.processedImage.split(',')[1]).length;
+      setCompressedSize(compressedImageSize);
+
+      const percentageSaved = ((originalSize - compressedImageSize) / originalSize) * 100;
+      setSavedPercentage(percentageSaved.toFixed(2));
+
+      setShowSizeComparison(true);
+      setLoading(false);
     } catch (err) {
-      setError(err.message || 'Compression failed');
-      console.error('Compression failed:', err);
-    } finally {
+      setError('An error occurred during image compression.');
       setLoading(false);
     }
   };
 
   const handleDownload = () => {
-    downloadImage(compressedImage, 'compressed_image.jpg');
+    downloadImage(compressedImage, `compressed_${filename}`);
   };
 
   return (
@@ -183,6 +209,20 @@ const CompressImage = () => {
             />
             <span className="ml-2 text-gray-300">Show Compressed Image</span>
           </label>
+
+          {showSizeComparison && (
+            <div className="mt-4">
+              <p className="text-green-500">
+                Saved {savedPercentage}%
+              </p>
+              <p>
+                Your Images are now {savedPercentage}% smaller!
+              </p>
+              <p>
+                {originalSize && (originalSize / 1024).toFixed(2)} KB → {(compressedSize / 1024).toFixed(2)} KB
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>

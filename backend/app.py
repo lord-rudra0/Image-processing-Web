@@ -15,6 +15,7 @@ from utils.image_processing import (
     apply_special_effect,
     apply_geometric_transform
 )
+from io import BytesIO
 
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
@@ -44,70 +45,53 @@ def image_to_base64(image):
     except Exception as e:
         raise ValueError(f"Error converting image to base64: {str(e)}")
 
-def process_image(filename, operation, params=None):
-    """
-    Processes an image based on the specified operation.
-
-    Args:
-        filename (str): The name of the image file.
-        operation (str): The operation to perform (e.g., 'compress', 'resize').
-        params (dict, optional): Parameters for the operation. Defaults to None.
-
-    Returns:
-        str: Base64 encoded image data.
-
-    Raises:
-        FileNotFoundError: If the image file is not found.
-        ValueError: If the parameters are invalid.
-        Exception: For any other processing errors.
-    """
-    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    if not os.path.exists(filepath):
-        raise FileNotFoundError("Image not found")
-
+def process_image(image, filename, action, **kwargs):
     try:
-        img = Image.open(filepath)
+        img = Image.open(image)
+        image_format = img.format.lower()  # Store the original format
 
-        if operation == 'compress':
-            quality = params.get('quality', 85)
-            if not (isinstance(quality, int) and 1 <= quality <= 100):
-                raise ValueError("Quality must be an integer between 1 and 100")
-            buffer = io.BytesIO()
-            img.save(buffer, format="JPEG", optimize=True, quality=quality)
-        elif operation == 'resize':
-            width, height = params.get('width'), params.get('height')
-            if not (isinstance(width, int) and width > 0 and isinstance(height, int) and height > 0):
-                raise ValueError("Width and height must be positive integers")
-            img = img.resize((width, height))
-            buffer = io.BytesIO()
-            img.save(buffer, format="JPEG")
-        elif operation == 'crop':
-            left, top, right, bottom = params.get('left'), params.get('top'), params.get('right'), params.get('bottom')
-            if not all(isinstance(coord, int) for coord in [left, top, right, bottom]):
-                raise ValueError("Crop coordinates must be integers")
+        if action == 'compress':
+            quality = int(kwargs.get('quality', 85))
+            img_io = BytesIO()
+            img.save(img_io, image_format, quality=quality, optimize=True)
+        elif action == 'resize':
+            width = int(kwargs.get('width'))
+            height = int(kwargs.get('height'))
+            img = img.resize((width, height), Image.LANCZOS)
+            img_io = BytesIO()
+            img.save(img_io, image_format)
+        elif action == 'crop':
+            left = int(kwargs.get('left'))
+            top = int(kwargs.get('top'))
+            right = int(kwargs.get('right'))
+            bottom = int(kwargs.get('bottom'))
             img = img.crop((left, top, right, bottom))
-            buffer = io.BytesIO()
-            img.save(buffer, format="JPEG")
-        elif operation == 'convert-to-jpg':
-            buffer = io.BytesIO()
+            img_io = BytesIO()
+            img.save(img_io, image_format)
+        elif action == 'convert-to-jpg':
             img = img.convert('RGB')
-            img.save(buffer, format="JPEG")
+            img_io = BytesIO()
+            img.save(img_io, 'JPEG', quality=85)
+            image_format = 'jpeg'
         else:
-            raise ValueError("Invalid operation")
+            raise ValueError("Invalid action specified")
 
-        buffer.seek(0)
-        img_byte_arr = buffer.read()
-        img_str = base64.b64encode(img_byte_arr).decode('utf-8')
-        return img_str
+        img_io.seek(0)
+        img_data = base64.b64encode(img_io.read()).decode('utf-8')
+        img_size = len(img_data)  # Size after processing
 
-    except FileNotFoundError as e:
-        raise e
+        return {
+            'processedImage': f'data:image/{image_format};base64,{img_data}',
+            'size': img_size,
+            'format': image_format
+        }
+
+    except FileNotFoundError:
+        return {'error': 'File not found.'}
     except ValueError as e:
-        raise e
-    except UnidentifiedImageError:
-        raise ValueError("Unable to open image")
+        return {'error': str(e)}
     except Exception as e:
-        raise Exception(f"Image processing failed: {str(e)}")
+        return {'error': str(e)}
 
 @app.route('/api/process', methods=['POST'])
 def process_image_route():
@@ -221,106 +205,69 @@ def test():
 @app.route('/api/upload', methods=['POST'])
 def upload_image():
     if 'image' not in request.files:
-        return jsonify({'error': 'No image provided'}), 400
-
-    image = request.files['image']
-    if image.filename == '':
-        return jsonify({'error': 'No image selected'}), 400
-
-    try:
-        img = Image.open(image)
-        filepath = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
-        img.save(filepath)
-        return jsonify({'message': 'Image uploaded successfully', 'filename': image.filename}), 200
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': 'No image part'}), 400
+    file = request.files['image']
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
+    if file:
+        filename = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+        file.save(filename)
+        return jsonify({'message': 'Image uploaded successfully', 'filename': file.filename}), 200
 
 @app.route('/api/compress', methods=['POST'])
 def compress_image():
-    try:
-        data = request.get_json()
-        filename = data.get('filename')
-        quality = data.get('quality', 85)
+    if 'image' not in request.files:
+        return jsonify({'error': 'No image part'}), 400
+    image = request.files['image']
+    filename = request.form.get('filename')
+    quality = request.form.get('quality', 85)
 
-        if not filename:
-            return jsonify({'error': 'No filename provided'}), 400
-
-        img_str = process_image(filename, 'compress', {'quality': quality})
-        return jsonify({'image': img_str, 'message': 'Image compressed successfully'}), 200
-
-    except FileNotFoundError:
-        return jsonify({'error': 'Image not found'}), 404
-    except ValueError as e:
-        return jsonify({'error': str(e)}), 400
-    except Exception as e:
-        print(e)
-        return jsonify({'error': str(e)}), 500
+    result = process_image(image, filename, 'compress', quality=quality)
+    if 'error' in result:
+        return jsonify({'error': result['error']}), 400
+    return jsonify(result), 200
 
 @app.route('/api/resize', methods=['POST'])
 def resize_image():
-    try:
-        data = request.get_json()
-        filename = data.get('filename')
-        width = data.get('width')
-        height = data.get('height')
+    if 'image' not in request.files:
+        return jsonify({'error': 'No image part'}), 400
+    image = request.files['image']
+    filename = request.form.get('filename')
+    width = request.form.get('width')
+    height = request.form.get('height')
 
-        if not filename or not width or not height:
-            return jsonify({'error': 'Filename, width, and height are required'}), 400
-
-        img_str = process_image(filename, 'resize', {'width': width, 'height': height})
-        return jsonify({'image': img_str, 'message': 'Image resized successfully'}), 200
-
-    except FileNotFoundError:
-        return jsonify({'error': 'Image not found'}), 404
-    except ValueError as e:
-        return jsonify({'error': str(e)}), 400
-    except Exception as e:
-        print(e)
-        return jsonify({'error': str(e)}), 500
+    result = process_image(image, filename, 'resize', width=width, height=height)
+    if 'error' in result:
+        return jsonify({'error': result['error']}), 400
+    return jsonify(result), 200
 
 @app.route('/api/crop', methods=['POST'])
 def crop_image():
-    try:
-        data = request.get_json()
-        filename = data.get('filename')
-        left = data.get('left')
-        top = data.get('top')
-        right = data.get('right')
-        bottom = data.get('bottom')
+    if 'image' not in request.files:
+        return jsonify({'error': 'No image part'}), 400
+    image = request.files['image']
+    filename = request.form.get('filename')
+    left = request.form.get('left')
+    top = request.form.get('top')
+    right = request.form.get('right')
+    bottom = request.form.get('bottom')
 
-        if not filename or not all([left, top, right, bottom]):
-            return jsonify({'error': 'Filename and crop coordinates are required'}), 400
-
-        img_str = process_image(filename, 'crop', {'left': left, 'top': top, 'right': right, 'bottom': bottom})
-        return jsonify({'image': img_str, 'message': 'Image cropped successfully'}), 200
-
-    except FileNotFoundError:
-        return jsonify({'error': 'Image not found'}), 404
-    except ValueError as e:
-        return jsonify({'error': str(e)}), 400
-    except Exception as e:
-        print(e)
-        return jsonify({'error': str(e)}), 500
+    result = process_image(image, filename, 'crop', left=left, top=top, right=right, bottom=bottom)
+    if 'error' in result:
+        return jsonify({'error': result['error']}), 400
+    return jsonify(result), 200
 
 @app.route('/api/convert-to-jpg', methods=['POST'])
 def convert_to_jpg():
-    try:
-        data = request.get_json()
-        filename = data.get('filename')
+    if 'image' not in request.files:
+        return jsonify({'error': 'No image part'}), 400
+    image = request.files['image']
+    filename = request.form.get('filename')
 
-        if not filename:
-            return jsonify({'error': 'No filename provided'}), 400
-
-        img_str = process_image(filename, 'convert-to-jpg')
-        return jsonify({'image': img_str, 'message': 'Image converted to JPG successfully'}), 200
-
-    except FileNotFoundError:
-        return jsonify({'error': 'Image not found'}), 404
-    except ValueError as e:
-        return jsonify({'error': str(e)}), 400
-    except Exception as e:
-        print(e)
-        return jsonify({'error': str(e)}), 500
+    result = process_image(image, filename, 'convert-to-jpg')
+    if 'error' in result:
+        return jsonify({'error': result['error']}), 400
+    return jsonify(result), 200
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
