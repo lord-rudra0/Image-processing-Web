@@ -1,5 +1,6 @@
 import React from 'react';
 import Navbar from './Navbar';
+import Footer from "./Footer"
 
 const Layout = ({ children }) => {
   return (
@@ -10,6 +11,7 @@ const Layout = ({ children }) => {
       <main className="max-w-7xl mx-auto py-8 px-8">
         {children}
       </main>
+      <Footer />
     </div>
   );
 };
