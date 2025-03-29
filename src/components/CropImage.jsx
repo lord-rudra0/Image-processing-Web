@@ -80,7 +80,13 @@ const CropImage = () => {
   }, [aspectRatio, cropWidth]);
 
   useEffect(() => {
-    drawCropRectangle();
+    let animationFrame;
+    const animate = () => {
+        drawCropRectangle();
+        animationFrame = requestAnimationFrame(animate);
+    };
+    animate();
+    return () => cancelAnimationFrame(animationFrame);
   }, [selectedImage, cropWidth, cropHeight, positionX, positionY, isDragging]);
 
   const drawCropRectangle = () => {
@@ -96,9 +102,52 @@ const CropImage = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(image, 0, 0);
 
-    ctx.strokeStyle = 'blue';
-    ctx.lineWidth = 2;
+    // Draw animated border
+    const now = Date.now();
+    const dashLength = 20;
+    const dashSpeed = 0.1;
+    const offset = ((now * dashSpeed) % (dashLength * 2)) - dashLength;
+
+    ctx.strokeStyle = '#3b82f6';
+    ctx.lineWidth = 3;
+    ctx.setLineDash([dashLength, dashLength]);
+    ctx.lineDashOffset = -offset;
     ctx.strokeRect(positionX, positionY, cropWidth, cropHeight);
+
+    // Draw corner indicators
+    const cornerSize = 10;
+    ctx.setLineDash([]); // Solid lines for corners
+
+    // Top-left corner
+    ctx.beginPath();
+    ctx.moveTo(positionX, positionY + cornerSize);
+    ctx.lineTo(positionX, positionY);
+    ctx.lineTo(positionX + cornerSize, positionY);
+    ctx.stroke();
+
+    // Top-right corner
+    ctx.beginPath();
+    ctx.moveTo(positionX + cropWidth - cornerSize, positionY);
+    ctx.lineTo(positionX + cropWidth, positionY);
+    ctx.lineTo(positionX + cropWidth, positionY + cornerSize);
+    ctx.stroke();
+
+    // Bottom-right corner
+    ctx.beginPath();
+    ctx.moveTo(positionX + cropWidth, positionY + cropHeight - cornerSize);
+    ctx.lineTo(positionX + cropWidth, positionY + cropHeight);
+    ctx.lineTo(positionX + cropWidth - cornerSize, positionY + cropHeight);
+    ctx.stroke();
+
+    // Bottom-left corner
+    ctx.beginPath();
+    ctx.moveTo(positionX + cornerSize, positionY + cropHeight);
+    ctx.lineTo(positionX, positionY + cropHeight);
+    ctx.lineTo(positionX, positionY + cropHeight - cornerSize);
+    ctx.stroke();
+
+    // Request animation frame for smooth animation
+    requestAnimationFrame(drawCropRectangle);
   };
 
   const handleMouseDown = (e) => {

@@ -190,22 +190,61 @@ const WatermarkImage = () => {
                                         top: overlayPosition.y,
                                         width: overlaySize.width,
                                         height: overlaySize.height,
-                                        border: '2px dashed #3b82f6',
+                                        border: '2px dashed rgba(59, 130, 246, 0.8)',
+                                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
                                         cursor: 'move',
                                         boxSizing: 'border-box',
+                                        boxShadow: '0 0 8px rgba(59, 130, 246, 0.6)',
+                                        transition: 'all 0.2s ease',
+                                        transformOrigin: 'center center',
                                     }}
                                 >
                                     <div
                                         style={{
                                             position: 'absolute',
-                                            right: -4,
-                                            bottom: -4,
-                                            width: 8,
-                                            height: 8,
+                                            right: -6,
+                                            bottom: -6,
+                                            width: 12,
+                                            height: 12,
                                             backgroundColor: '#3b82f6',
+                                            border: '2px solid white',
+                                            borderRadius: '50%',
                                             cursor: 'se-resize',
+                                            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
                                         }}
                                     />
+                                    <div
+                                        style={{
+                                            position: 'absolute',
+                                            top: '50%',
+                                            left: '50%',
+                                            transform: 'translate(-50%, -50%)',
+                                            color: '#3b82f6',
+                                            fontSize: '12px',
+                                            fontWeight: 'bold',
+                                            backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                                            padding: '2px 4px',
+                                            borderRadius: '4px',
+                                        }}
+                                    >
+                                        {`${overlaySize.width} x ${overlaySize.height}`}
+                                    </div>
+                                    <div
+                                        style={{
+                                            position: 'absolute',
+                                            top: -24,
+                                            left: '50%',
+                                            transform: 'translateX(-50%)',
+                                            color: '#3b82f6',
+                                            fontSize: '12px',
+                                            fontWeight: 'bold',
+                                            backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                                            padding: '2px 4px',
+                                            borderRadius: '4px',
+                                        }}
+                                    >
+                                        {`X: ${overlayPosition.x}, Y: ${overlayPosition.y}`}
+                                    </div>
                                 </div>
                             </div>
                         )
