@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { compressImage, uploadImage } from '../api/imageService';
 import downloadImage from '../utils/download';
+import { useDropzone } from 'react-dropzone';
 
 const CompressImage = () => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -10,8 +11,8 @@ const CompressImage = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleImageUpload = async (event) => {
-    const imageFile = event.target.files[0];
+  const onDrop = useCallback(async (acceptedFiles) => {
+    const imageFile = acceptedFiles[0];
     setSelectedImage(URL.createObjectURL(imageFile));
 
     try {
@@ -24,7 +25,13 @@ const CompressImage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: 'image/*',
+    multiple: false,
+  });
 
   const handleCompress = async () => {
     setError('');
@@ -49,31 +56,38 @@ const CompressImage = () => {
       <h2 className="text-2xl font-semibold mb-6">Compress Image</h2>
       {error && <div className="text-red-500 mb-4">{error}</div>}
 
-      <div className="mb-4">
-        <label className="block text-gray-300 text-sm font-bold mb-2" htmlFor="image">
-          Upload Image:
-        </label>
-        <input
-          type="file"
-          id="image"
-          accept="image/*"
-          onChange={handleImageUpload}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
-        />
+      <div
+        {...getRootProps()}
+        className={`mb-4 p-4 border-2 border-dashed rounded-lg cursor-pointer transition-colors duration-300 ${
+          isDragActive ? 'border-blue-500 bg-gray-700' : 'border-gray-500 bg-gray-900'
+        }`}
+      >
+        <input {...getInputProps()} />
+        <p className="text-center text-gray-400">
+          {isDragActive ? 'Drop the image here...' : 'Drag and drop an image here, or click to select one'}
+        </p>
       </div>
 
       <div className="flex justify-center gap-4 mb-6">
         {selectedImage && (
           <div className="w-1/2">
             <h3 className="text-lg font-semibold mb-2">Uploaded Image:</h3>
-            <img src={selectedImage} alt="Uploaded" className="max-w-full rounded-lg shadow-md" />
+            <img
+              src={selectedImage}
+              alt="Uploaded"
+              className="max-w-full rounded-lg shadow-md transition-opacity duration-300"
+            />
           </div>
         )}
 
         {compressedImage && (
           <div className="w-1/2">
             <h3 className="text-lg font-semibold mb-2">Compressed Image:</h3>
-            <img src={compressedImage} alt="Compressed" className="max-w-full rounded-lg shadow-md" />
+            <img
+              src={compressedImage}
+              alt="Compressed"
+              className="max-w-full rounded-lg shadow-md transition-opacity duration-300"
+            />
             <button
               onClick={handleDownload}
               className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4"
@@ -100,7 +114,7 @@ const CompressImage = () => {
 
       <button
         onClick={handleCompress}
-        className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${
+        className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-colors duration-300 ${
           loading ? 'opacity-50 cursor-not-allowed' : ''
         }`}
         disabled={loading || !filename}
