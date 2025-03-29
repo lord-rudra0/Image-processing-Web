@@ -65,6 +65,7 @@ const ImageEditor = () => {
     strength: 0.5,
   });
   const [selectedFilter, setSelectedFilter] = useState(null);
+  const [originalImage, setOriginalImage] = useState(null);
 
   const applyFilter = async (filterType, params) => {
     try {
@@ -181,7 +182,9 @@ const ImageEditor = () => {
   const handleImageUpload = useCallback((file) => {
     const reader = new FileReader();
     reader.onloadend = () => {
-      setImage(reader.result);
+      const imageData = reader.result;
+      setImage(imageData);
+      setOriginalImage(imageData);
     };
     reader.readAsDataURL(file);
   }, []);
@@ -208,6 +211,37 @@ const ImageEditor = () => {
     </button>
   );
 
+  const resetFilters = () => {
+    setFilterValues({
+      // Basic Filters (CSS Filters)
+      brightness: 100,
+      contrast: 100,
+      saturation: 100,
+      opacity: 100,
+      blur: 0,
+      hueRotate: 0,
+      grayscale: 0,
+      sepia: 0,
+      invert: 0,
+      
+      // Advanced Filters (Backend Processing)
+      threshold: 127,
+      blockSize: 11,
+      c: 2,
+      sigma: 2.0,
+      kernelSize: 5,
+      strength: 0.5,
+    });
+    
+    setSelectedFilter(null);
+    
+    if (image) {
+      if (originalImage) {
+        setImage(originalImage);
+      }
+    }
+  };
+
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden">
       <div className="grid grid-cols-1 lg:grid-cols-2">
@@ -231,10 +265,10 @@ const ImageEditor = () => {
             <div className="mt-4 flex justify-center space-x-4">
               <ActionButton
                 variant="danger"
-                onClick={() => setImage(null)}
+                onClick={resetFilters}
                 disabled={loading}
               >
-                Reset Image
+                Reset Filters
               </ActionButton>
               <ActionButton
                 variant="success"
@@ -347,6 +381,30 @@ const ImageEditor = () => {
         onClose={() => setSelectedFilter(null)}
         filterInfo={selectedFilter && filterInfo[selectedFilter] ? filterInfo[selectedFilter] : null}
       /> */}
+
+      {/* Add reset button */}
+      <div className="flex justify-end p-4 border-t border-gray-200">
+        <button
+          onClick={resetFilters}
+          className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+          disabled={!image}
+        >
+          <svg 
+            className="w-4 h-4 mr-2" 
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor"
+          >
+            <path 
+              strokeLinecap="round" 
+              strokeLinejoin="round" 
+              strokeWidth={2} 
+              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" 
+            />
+          </svg>
+          Reset Filters
+        </button>
+      </div>
     </div>
   );
 };
