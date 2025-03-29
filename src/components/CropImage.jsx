@@ -17,6 +17,7 @@ const CropImage = () => {
   const [imageUploaded, setImageUploaded] = useState(false);
   const [showImage, setShowImage] = useState(false);
   const imageRef = useRef(null);
+  const canvasRef = useRef(null);
 
   const aspectRatioOptions = {
     FreeForm: null,
@@ -75,6 +76,28 @@ const CropImage = () => {
       }
     }
   }, [aspectRatio, cropWidth]);
+
+  useEffect(() => {
+    drawCropRectangle();
+  }, [selectedImage, cropWidth, cropHeight, positionX, positionY]);
+
+  const drawCropRectangle = () => {
+    if (!selectedImage || !imageRef.current || !canvasRef.current) return;
+
+    const image = imageRef.current;
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = image.naturalWidth;
+    canvas.height = image.naturalHeight;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(image, 0, 0);
+
+    ctx.strokeStyle = 'blue';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(positionX, positionY, cropWidth, cropHeight);
+  };
 
   const handleCrop = async () => {
     setError('');
@@ -157,13 +180,20 @@ const CropImage = () => {
             </div>
           ) : (
             selectedImage && (
-              <div className="mb-4">
+              <div className="mb-4 relative">
                 <h3 className="text-lg font-semibold mb-2">Uploaded Image:</h3>
+                <canvas
+                  ref={canvasRef}
+                  className="max-w-full rounded-lg shadow-md transition-opacity duration-300 absolute top-0 left-0"
+                  style={{ zIndex: 1 }}
+                />
                 <img
                   src={selectedImage}
                   alt="Uploaded"
                   className="max-w-full rounded-lg shadow-md transition-opacity duration-300"
                   ref={imageRef}
+                  style={{ opacity: 0 }}
+                  onLoad={drawCropRectangle}
                 />
               </div>
             )
