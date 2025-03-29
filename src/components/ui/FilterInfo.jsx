@@ -4,10 +4,10 @@ const FilterInfo = ({ isOpen, onClose, filterInfo }) => {
   if (!isOpen || !filterInfo) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl">
+    <div className="fixed inset-0 bg-black/75 flex items-center justify-center z-50 backdrop-blur-sm">
+      <div className="bg-gray-900 rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl border border-gray-700">
         <div className="flex justify-between items-start mb-4">
-          <h3 className="text-xl font-bold text-gray-900">{filterInfo.title || 'Filter Information'}</h3>
+          <h3 className="text-xl font-bold text-gray-100">{filterInfo.title || 'Filter Information'}</h3>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-500"
@@ -19,18 +19,18 @@ const FilterInfo = ({ isOpen, onClose, filterInfo }) => {
         </div>
         <div className="prose prose-sm">
           {filterInfo.description && (
-            <p className="text-gray-600 mb-4">{filterInfo.description}</p>
+            <p className="text-gray-300 mb-4">{filterInfo.description}</p>
           )}
           {filterInfo.usage && (
             <>
-              <h4 className="text-sm font-semibold text-gray-700 mb-2">Usage:</h4>
-              <p className="text-gray-600 mb-4">{filterInfo.usage}</p>
+              <h4 className="text-sm font-semibold text-gray-300 mb-2">Usage:</h4>
+              <p className="text-gray-300 mb-4">{filterInfo.usage}</p>
             </>
           )}
           {filterInfo.parameters && (
             <>
-              <h4 className="text-sm font-semibold text-gray-700 mb-2">Parameters:</h4>
-              <ul className="list-disc list-inside text-gray-600">
+              <h4 className="text-sm font-semibold text-gray-300 mb-2">Parameters:</h4>
+              <ul className="list-disc list-inside text-gray-300">
                 {Object.entries(filterInfo.parameters).map(([key, value]) => (
                   <li key={key} className="mb-1">
                     <span className="font-medium">{key}:</span> {value}

@@ -243,183 +243,182 @@ const ImageEditor = () => {
   };
 
   return (
-    <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
-        {/* Image Preview Section */}
-        <div className="space-y-6">
-          {image ? (
-            <div className="relative group">
-              <img
-                src={image}
-                alt="Preview"
-                className="w-full h-auto rounded-lg shadow-md transition-transform duration-300 group-hover:scale-[1.02] border-2 border-white/20"
-                style={{ filter: getCSSFilters() }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-all duration-300 rounded-lg" />
-            </div>
-          ) : (
-            <ImageDropzone
-              onImageUpload={handleImageUpload}
-              className="transform transition-all duration-300 hover:scale-[1.02]"
-            />
-          )}
+    <div className="bg-gradient-to-br from-gray-950 to-gray-900 min-h-screen p-8">
+      <div className="max-w-7xl mx-auto bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl shadow-2xl overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
+          {/* Image Preview Section */}
+          <div className="space-y-8">
+            {image ? (
+              <div className="relative group">
+                <img
+                  src={image}
+                  alt="Preview"
+                  className="w-full h-auto rounded-2xl shadow-2xl border-2 border-gray-700/50"
+                  style={{ filter: getCSSFilters() }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl" />
+              </div>
+            ) : (
+              <ImageDropzone onImageUpload={handleImageUpload} />
+            )}
 
-          {/* Action Buttons */}
-          <div className="flex gap-4 justify-end">
-            <button
-              onClick={resetFilters}
-              disabled={!image}
-              className={`
-                flex items-center px-4 py-2 rounded-lg font-medium
-                transition-all duration-300 transform
-                ${!image 
-                  ? 'opacity-50 cursor-not-allowed bg-gray-100 text-gray-400'
-                  : 'bg-gradient-to-br from-gray-100 to-gray-200 text-gray-700 hover:from-gray-200 hover:to-gray-300 hover:scale-105 active:scale-95 shadow-sm'
-                }
-              `}
-            >
-              <svg 
-                className="w-4 h-4 mr-2 transition-transform duration-300 hover:rotate-180" 
-                fill="none" 
-                viewBox="0 0 24 24" 
-                stroke="currentColor"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-              Reset Filters
-            </button>
-            
-            <button
-              onClick={handleDownload}
-              disabled={!image}
-              className={`
-                flex items-center px-4 py-2 rounded-lg font-medium
-                transition-all duration-300 transform
-                ${!image 
-                  ? 'opacity-50 cursor-not-allowed bg-blue-100 text-blue-400'
-                  : 'bg-gradient-to-br from-blue-500 to-indigo-500 text-white hover:from-blue-600 hover:to-indigo-600 hover:scale-105 active:scale-95 shadow-sm'
-                }
-              `}
-              >
-              <svg 
-                className="w-4 h-4 mr-2 animate-bounce" 
-                fill="none" 
-                viewBox="0 0 24 24" 
-                stroke="currentColor"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-              </svg>
-              Download
-            </button>
-          </div>
-        </div>
-
-        {/* Controls Section */}
-        <div className="space-y-6">
-          {/* Filter Categories */}
-          <div className="flex gap-2 overflow-x-auto pb-2">
-            {Object.keys(filterTabs).map((tab) => (
+            {/* Action Buttons */}
+            <div className="flex gap-4 justify-end">
               <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
+                onClick={resetFilters}
+                disabled={!image}
                 className={`
-                  px-4 py-2 rounded-lg font-medium whitespace-nowrap
-                  transition-all duration-300 transform
-                  ${activeTab === tab
-                    ? 'bg-gradient-to-br from-blue-500 to-indigo-500 text-white scale-105 shadow-sm'
-                    : 'bg-gradient-to-br from-gray-100 to-gray-200 text-gray-700 hover:from-gray-200 hover:to-gray-300 hover:scale-105 shadow-sm'
+                  flex items-center px-6 py-3 rounded-xl font-medium
+                  transition-all duration-300
+                  ${!image 
+                    ? 'bg-gray-800/50 text-gray-500 cursor-not-allowed'
+                    : 'bg-gradient-to-br from-gray-800 to-gray-700 text-gray-200 hover:from-gray-700 hover:to-gray-600 shadow-lg hover:shadow-xl hover:-translate-y-1'
                   }
                 `}
               >
-                {filterTabs[tab].title}
+                <svg 
+                  className="w-5 h-5 mr-2" 
+                  fill="none" 
+                  viewBox="0 0 24 24" 
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Reset Filters
               </button>
-            ))}
+              
+              <button
+                onClick={handleDownload}
+                disabled={!image}
+                className={`
+                  flex items-center px-6 py-3 rounded-xl font-medium
+                  transition-all duration-300
+                  ${!image 
+                    ? 'bg-blue-800/50 text-blue-400/50 cursor-not-allowed'
+                    : 'bg-gradient-to-br from-blue-600 to-indigo-600 text-white hover:from-blue-500 hover:to-indigo-500 shadow-lg hover:shadow-xl hover:-translate-y-1'
+                  }
+                `}
+              >
+                <svg 
+                  className="w-5 h-5 mr-2" 
+                  fill="none" 
+                  viewBox="0 0 24 24" 
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+              </button>
+            </div>
           </div>
 
-          {/* Filter Controls */}
-          <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6 transition-all duration-300 hover:shadow-md border border-white/20">
-            {activeTab === 'basic' ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {filterTabs.basic.controls.map(control => (
-                  <div key={control.name} className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700">
-                      {control.label}
-                    </label>
-                    <Slider
-                      min={control.min}
-                      max={control.max}
-                      value={filterValues[control.name]}
-                      onChange={(value) => handleSliderChange(control.name, value)}
-                    />
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="flex flex-wrap gap-2">
-                {filterTabs[activeTab].buttons.map(button => (
-                  <FilterButton
-                    key={button.name}
-                    onClick={() => {
-                      handleFilterClick(button.name);
-                      applyFilter(activeTab, button.params);
-                    }}
-                    disabled={loading}
-                    filter={button.name}
-                  >
-                    {button.label}
-                  </FilterButton>
-                ))}
-              </div>
-            )}
-          </div>
+          {/* Controls Section */}
+          <div className="space-y-8">
+            {/* Filter Categories */}
+            <div className="flex gap-3 overflow-x-auto pb-3">
+              {Object.keys(filterTabs).map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`
+                    px-5 py-3 rounded-xl font-medium whitespace-nowrap
+                    transition-all duration-300
+                    ${activeTab === tab
+                      ? 'bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-lg hover:-translate-y-1'
+                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-700 shadow-lg hover:shadow-xl hover:-translate-y-1'
+                    }
+                  `}
+                >
+                  {filterTabs[tab].title}
+                </button>
+              ))}
+            </div>
 
-          {/* Filter Information */}
-          {selectedFilter && filterInfo[selectedFilter] && (
-            <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6 transition-all duration-300 hover:shadow-md animate-fadeIn border border-white/20">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                {filterInfo[selectedFilter].title}
-              </h3>
-              <p className="text-gray-600 mb-4 leading-relaxed">
-                {filterInfo[selectedFilter].description}
-              </p>
-              {filterInfo[selectedFilter].usage && (
-                <div className="mb-4">
-                  <h4 className="text-sm font-semibold text-gray-700 mb-2">Usage:</h4>
-                  <p className="text-gray-600 leading-relaxed">
-                    {filterInfo[selectedFilter].usage}
-                  </p>
+            {/* Filter Controls */}
+            <div className="bg-gray-800/90 rounded-2xl p-6 border border-gray-700/50 shadow-2xl backdrop-blur-sm">
+              {activeTab === 'basic' ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  {filterTabs.basic.controls.map(control => (
+                    <div key={control.name} className="space-y-3">
+                      <label className="block text-sm font-medium text-gray-300">
+                        {control.label}
+                      </label>
+                      <Slider
+                        min={control.min}
+                        max={control.max}
+                        value={filterValues[control.name]}
+                        onChange={(value) => handleSliderChange(control.name, value)}
+                      />
+                    </div>
+                  ))}
                 </div>
-              )}
-              {filterInfo[selectedFilter].parameters && (
-                <div>
-                  <h4 className="text-sm font-semibold text-gray-700 mb-2">Parameters:</h4>
-                  <ul className="space-y-2">
-                    {Object.entries(filterInfo[selectedFilter].parameters).map(([key, value]) => (
-                      <li 
-                        key={key}
-                        className="flex items-center text-gray-600 bg-white/50 rounded-lg p-3 transition-all duration-300 hover:shadow-sm backdrop-blur-sm"
-                      >
-                        <span className="font-medium mr-2">{key}:</span>
-                        <span>{value}</span>
-                      </li>
-                    ))}
-                  </ul>
+              ) : (
+                <div className="flex flex-wrap gap-3">
+                  {filterTabs[activeTab].buttons.map(button => (
+                    <FilterButton
+                      key={button.name}
+                      onClick={() => {
+                        handleFilterClick(button.name);
+                        applyFilter(activeTab, button.params);
+                      }}
+                      disabled={loading}
+                      filter={button.name}
+                    >
+                      {button.label}
+                    </FilterButton>
+                  ))}
                 </div>
               )}
             </div>
-          )}
-        </div>
-      </div>
 
-      {/* Loading Overlay */}
-      {loading && (
-        <div className="absolute inset-0 bg-white/75 flex items-center justify-center backdrop-blur-sm transition-all duration-300">
-          <div className="flex flex-col items-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mb-4"></div>
-            <p className="text-blue-500 font-medium animate-pulse">Processing...</p>
+            {/* Filter Information */}
+            {selectedFilter && filterInfo[selectedFilter] && (
+              <div className="bg-gray-800/90 rounded-2xl p-6 border border-gray-700/50 shadow-2xl backdrop-blur-sm">
+                <h3 className="text-xl font-semibold text-gray-100 mb-4">
+                  {filterInfo[selectedFilter].title}
+                </h3>
+                <p className="text-gray-300 mb-4 leading-relaxed">
+                  {filterInfo[selectedFilter].description}
+                </p>
+                {filterInfo[selectedFilter].usage && (
+                  <div className="mb-4">
+                    <h4 className="text-sm font-semibold text-gray-200 mb-2">Usage:</h4>
+                    <p className="text-gray-300 leading-relaxed">
+                      {filterInfo[selectedFilter].usage}
+                    </p>
+                  </div>
+                )}
+                {filterInfo[selectedFilter].parameters && (
+                  <div>
+                    <h4 className="text-sm font-semibold text-gray-200 mb-2">Parameters:</h4>
+                    <ul className="space-y-3">
+                      {Object.entries(filterInfo[selectedFilter].parameters).map(([key, value]) => (
+                        <li 
+                          key={key}
+                          className="flex items-center text-gray-300 bg-gray-700/50 rounded-xl p-4 backdrop-blur-sm"
+                        >
+                          <span className="font-medium mr-2">{key}:</span>
+                          <span>{value}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
-      )}
+
+        {/* Loading Overlay */}
+        {loading && (
+          <div className="absolute inset-0 bg-gray-950/95 flex items-center justify-center backdrop-blur-lg">
+            <div className="flex flex-col items-center">
+              <div className="animate-spin rounded-full h-14 w-14 border-b-2 border-blue-500 mb-4"></div>
+              <p className="text-blue-300 font-medium text-lg">Processing...</p>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

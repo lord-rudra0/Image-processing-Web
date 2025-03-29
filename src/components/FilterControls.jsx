@@ -9,17 +9,17 @@ const FilterControls = ({
   onReset
 }) => {
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl">
+    <div className="bg-gray-800/90 rounded-2xl p-6 border border-gray-700/50 shadow-2xl backdrop-blur-sm">
       <div className="flex justify-between items-center mb-6">
-        <div className="flex items-center space-x-2">
-          <Sliders className="w-5 h-5 text-blue-500 animate-pulse" />
-          <h2 className="text-xl font-semibold text-gray-800">Adjustments</h2>
+        <div className="flex items-center space-x-3">
+          <Sliders className="w-5 h-5 text-blue-400" />
+          <h2 className="text-xl font-semibold text-gray-100">Adjustments</h2>
         </div>
         <button
           onClick={onReset}
-          className="flex items-center space-x-2 px-4 py-2 text-sm bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95"
+          className="flex items-center space-x-2 px-4 py-2 text-sm bg-gray-700/50 text-gray-200 hover:bg-gray-700 rounded-lg transition-all duration-300 transform hover:-translate-y-0.5"
         >
-          <RotateCw className="w-4 h-4 transition-transform duration-300 hover:rotate-180" />
+          <RotateCw className="w-4 h-4" />
           <span>Reset Filters</span>
         </button>
       </div>
@@ -28,9 +28,9 @@ const FilterControls = ({
         {categories.map((category) => (
           <div 
             key={category.name}
-            className="bg-gray-50 rounded-lg p-4 transition-all duration-300 hover:shadow-md"
+            className="bg-gray-700/50 rounded-xl p-4 backdrop-blur-sm"
           >
-            <h3 className="text-lg font-medium text-gray-700 mb-4">
+            <h3 className="text-lg font-medium text-gray-200 mb-4">
               {category.name}
             </h3>
             <div className="space-y-4">
@@ -39,9 +39,9 @@ const FilterControls = ({
                   key={filter.name}
                   className="group transition-all duration-300"
                 >
-                  <label className="flex items-center justify-between text-sm font-medium text-gray-600 mb-2">
+                  <label className="flex items-center justify-between text-sm font-medium text-gray-300 mb-2">
                     <span>{filter.name}</span>
-                    <span className="text-gray-400 group-hover:text-blue-500 transition-colors duration-300">
+                    <span className="text-gray-400 group-hover:text-blue-400 transition-colors duration-300">
                       {values[filter.name]}{filter.unit}
                     </span>
                   </label>
@@ -51,7 +51,7 @@ const FilterControls = ({
                     max={filter.max}
                     value={values[filter.name]}
                     onChange={(e) => onChange(filter.name, e.target.value)}
-                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-500 transition-all duration-300 hover:bg-gray-300"
+                    className="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-blue-500 transition-all duration-300 hover:bg-gray-500"
                   />
                 </div>
               ))}
