@@ -75,3 +75,7 @@ export const getAvailableFilters = async () => {
     throw error;
   }
 };
+
+export const blurFace = (filename) => {
+  return handleRequest(`${API_URL}/blur-face`, 'POST', { filename });
+};

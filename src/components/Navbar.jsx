@@ -65,9 +65,8 @@ export default function Navbar() {
                 </div>
                 <div>
                   <h4 className="font-semibold text-gray-200 mb-2">SECURITY</h4>
-                  <Link to="/watermark-image"> <a href="#" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Watermark IMAGE</a>
-                  </Link>
-                  <a href="#" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Blur face</a>
+                  <Link to="/watermark-image" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Watermark IMAGE</Link>
+                  <Link to="/blur-face" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Blur Face</Link>
                 </div>
               </div>
             </div>

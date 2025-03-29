@@ -10,6 +10,7 @@ import ConvertToJpg from './components/ConvertToJpg';
 import UpscaleImage from './components/UpscaleImage';
 import RemoveBackground from './components/RemoveBackground';
 import WatermarkImage from './components/WatermarkImage';
+import BlurFace from './components/BlurFace';
 
 function App() {
   return (
@@ -84,6 +85,14 @@ function App() {
           element={
             <Layout>
               <WatermarkImage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/blur-face"
+          element={
+            <Layout>
+              <BlurFace />
             </Layout>
           }
         />

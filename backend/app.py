@@ -138,6 +138,14 @@ def process_image(filename, operation, **kwargs):
             compressed_size = img_io.tell()
             img_io.seek(0)
             img_base64 = base64.b64encode(img_io.read()).decode('utf-8')
+        elif operation == 'blur_face':
+            # Implement face blurring logic here
+            # This is a placeholder and should be replaced with the actual implementation
+            img_io = io.BytesIO()
+            img.save(img_io, img_format)
+            compressed_size = img_io.tell()
+            img_io.seek(0)
+            img_base64 = base64.b64encode(img_io.read()).decode('utf-8')
         else:
             raise ValueError(f"Unsupported operation: {operation}")
 
@@ -438,6 +446,23 @@ def add_watermark():
         return jsonify({'success': False, 'error': 'Image not found'}), 404
     except ValueError as e:
         return jsonify({'success': False, 'error': str(e)}), 400
+    except Exception as e:
+        print(e)
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/blur-face', methods=['POST'])
+def blur_face():
+    try:
+        data = request.get_json()
+        filename = data['filename']
+        
+        result = process_image(filename, 'blur_face')
+        return result
+
+    except KeyError as e:
+        return jsonify({'success': False, 'error': f'Missing parameter: {str(e)}'}), 400
+    except FileNotFoundError:
+        return jsonify({'success': False, 'error': 'Image not found'}), 404
     except Exception as e:
         print(e)
         return jsonify({'success': False, 'error': str(e)}), 500
