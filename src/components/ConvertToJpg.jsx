@@ -1,33 +1,26 @@
 import React, { useState } from 'react';
+import { convertToJpg } from '../api/imageService'; // Import the API function
 
 const ConvertToJpg = () => {
   const [filename, setFilename] = useState('');
   const [convertedImage, setConvertedImage] = useState(null);
+  const [error, setError] = useState('');
 
   const handleConvert = async () => {
+    setError(''); // Clear previous errors
     try {
-      const response = await fetch('http://localhost:5000/api/convert-to-jpg', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ filename }),
-      });
-
-      const data = await response.json();
-      if (data.image) {
-        setConvertedImage(`data:image/jpeg;base64,${data.image}`);
-      } else {
-        console.error('Conversion failed:', data.error);
-      }
-    } catch (error) {
-      console.error('Error:', error);
+      const data = await convertToJpg(filename);
+      setConvertedImage(`data:image/jpeg;base64,${data.image}`);
+    } catch (err) {
+      setError(err.message || 'Conversion failed');
+      console.error('Conversion failed:', err);
     }
   };
 
   return (
     <div className="p-4">
       <h2 className="text-xl font-semibold mb-4">Convert to JPG</h2>
+      {error && <div className="text-red-500 mb-2">{error}</div>}
       <input
         type="text"
         placeholder="Filename"

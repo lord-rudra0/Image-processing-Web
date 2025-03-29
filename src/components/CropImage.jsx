@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { cropImage } from '../api/imageService'; // Import the API function
 
 const CropImage = () => {
   const [filename, setFilename] = useState('');
@@ -7,31 +8,23 @@ const CropImage = () => {
   const [right, setRight] = useState(100);
   const [bottom, setBottom] = useState(100);
   const [croppedImage, setCroppedImage] = useState(null);
+  const [error, setError] = useState('');
 
   const handleCrop = async () => {
+    setError(''); // Clear previous errors
     try {
-      const response = await fetch('http://localhost:5000/api/crop', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ filename, left, top, right, bottom }),
-      });
-
-      const data = await response.json();
-      if (data.image) {
-        setCroppedImage(`data:image/jpeg;base64,${data.image}`);
-      } else {
-        console.error('Crop failed:', data.error);
-      }
-    } catch (error) {
-      console.error('Error:', error);
+      const data = await cropImage(filename, left, top, right, bottom);
+      setCroppedImage(`data:image/jpeg;base64,${data.image}`);
+    } catch (err) {
+      setError(err.message || 'Crop failed');
+      console.error('Crop failed:', err);
     }
   };
 
   return (
     <div className="p-4">
       <h2 className="text-xl font-semibold mb-4">Crop Image</h2>
+      {error && <div className="text-red-500 mb-2">{error}</div>}
       <input
         type="text"
         placeholder="Filename"

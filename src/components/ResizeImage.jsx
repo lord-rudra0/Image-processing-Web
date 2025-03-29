@@ -1,35 +1,28 @@
 import React, { useState } from 'react';
+import { resizeImage } from '../api/imageService'; // Import the API function
 
 const ResizeImage = () => {
   const [filename, setFilename] = useState('');
   const [width, setWidth] = useState(500);
   const [height, setHeight] = useState(500);
   const [resizedImage, setResizedImage] = useState(null);
+  const [error, setError] = useState('');
 
   const handleResize = async () => {
+    setError(''); // Clear previous errors
     try {
-      const response = await fetch('http://localhost:5000/api/resize', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ filename, width, height }),
-      });
-
-      const data = await response.json();
-      if (data.image) {
-        setResizedImage(`data:image/jpeg;base64,${data.image}`);
-      } else {
-        console.error('Resize failed:', data.error);
-      }
-    } catch (error) {
-      console.error('Error:', error);
+      const data = await resizeImage(filename, width, height);
+      setResizedImage(`data:image/jpeg;base64,${data.image}`);
+    } catch (err) {
+      setError(err.message || 'Resize failed');
+      console.error('Resize failed:', err);
     }
   };
 
   return (
     <div className="p-4">
       <h2 className="text-xl font-semibold mb-4">Resize Image</h2>
+      {error && <div className="text-red-500 mb-2">{error}</div>}
       <input
         type="text"
         placeholder="Filename"
