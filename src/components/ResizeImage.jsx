@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { resizeImage, uploadImage } from '../api/imageService';
+import downloadImage from '../utils/download';
 
 const ResizeImage = () => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -38,6 +39,10 @@ const ResizeImage = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDownload = () => {
+    downloadImage(resizedImage, 'resized_image.jpg');
   };
 
   return (
@@ -104,6 +109,12 @@ const ResizeImage = () => {
         <div className="mt-8">
           <h3 className="text-lg font-semibold mb-2">Resized Image:</h3>
           <img src={resizedImage} alt="Resized" className="max-w-full rounded-lg shadow-md" />
+          <button
+            onClick={handleDownload}
+            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4"
+          >
+            Download Resized Image
+          </button>
         </div>
       )}
     </div>

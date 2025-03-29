@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { compressImage, uploadImage } from '../api/imageService';
+import downloadImage from '../utils/download';
 
 const CompressImage = () => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -37,6 +38,10 @@ const CompressImage = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDownload = () => {
+    downloadImage(compressedImage, 'compressed_image.jpg');
   };
 
   return (
@@ -88,6 +93,12 @@ const CompressImage = () => {
         <div className="mt-8">
           <h3 className="text-lg font-semibold mb-2">Compressed Image:</h3>
           <img src={compressedImage} alt="Compressed" className="max-w-full rounded-lg shadow-md" />
+          <button
+            onClick={handleDownload}
+            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4"
+          >
+            Download Compressed Image
+          </button>
         </div>
       )}
     </div>

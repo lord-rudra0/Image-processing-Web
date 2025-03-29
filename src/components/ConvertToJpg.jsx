@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { convertToJpg } from '../api/imageService'; // Import the API function
+import { convertToJpg, uploadImage } from '../api/imageService'; // Import the API function
+import downloadImage from '../utils/download';
 
 const ConvertToJpg = () => {
   const [filename, setFilename] = useState('');
@@ -19,6 +20,10 @@ const ConvertToJpg = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDownload = () => {
+    downloadImage(convertedImage, 'converted_image.jpg');
   };
 
   return (
@@ -54,6 +59,12 @@ const ConvertToJpg = () => {
         <div className="mt-8">
           <h3 className="text-lg font-semibold mb-2">Converted Image:</h3>
           <img src={convertedImage} alt="Converted" className="max-w-full rounded-lg shadow-md" />
+          <button
+            onClick={handleDownload}
+            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4"
+          >
+            Download Converted Image
+          </button>
         </div>
       )}
     </div>

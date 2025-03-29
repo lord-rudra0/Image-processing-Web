@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { cropImage, uploadImage } from '../api/imageService';
+import downloadImage from '../utils/download';
 
 const CropImage = () => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -40,6 +41,10 @@ const CropImage = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDownload = () => {
+    downloadImage(croppedImage, 'cropped_image.jpg');
   };
 
   return (
@@ -132,6 +137,12 @@ const CropImage = () => {
         <div className="mt-8">
           <h3 className="text-lg font-semibold mb-2">Cropped Image:</h3>
           <img src={croppedImage} alt="Cropped" className="max-w-full rounded-lg shadow-md" />
+          <button
+            onClick={handleDownload}
+            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4"
+          >
+            Download Cropped Image
+          </button>
         </div>
       )}
     </div>
