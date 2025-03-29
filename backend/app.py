@@ -15,6 +15,7 @@ from utils.image_processing import (
     apply_special_effect,
     apply_geometric_transform
 )
+from skimage.transform import resize
 
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
@@ -82,6 +83,23 @@ def process_image(filename, operation, **kwargs):
             img = img.convert('RGB')
             img_io = io.BytesIO()
             img.save(img_io, 'JPEG')
+            compressed_size = img_io.tell()
+            img_io.seek(0)
+            img_base64 = base64.b64encode(img_io.read()).decode('utf-8')
+        elif operation == 'upscale':
+            method = kwargs.get('method', 'lanczos')
+            width = img.width * 2  # Upscale by 2x
+            height = img.height * 2
+            img_array = np.array(img)
+            resized_array = resize(img_array, (height, width), order={
+                'nearest': 0,
+                'bilinear': 1,
+                'bicubic': 3,
+                'lanczos': 5
+            }[method], anti_aliasing=True)
+            resized_img = Image.fromarray((resized_array * 255).astype(np.uint8))
+            img_io = io.BytesIO()
+            resized_img.save(img_io, img_format)
             compressed_size = img_io.tell()
             img_io.seek(0)
             img_base64 = base64.b64encode(img_io.read()).decode('utf-8')
@@ -324,6 +342,26 @@ def convert_to_jpg():
     except Exception as e:
         print(e)
         return jsonify({'error': str(e)}), 500
+
+@app.route('/api/upscale', methods=['POST'])
+def upscale_image():
+    try:
+        data = request.get_json()
+        filename = data['filename']
+        method = data.get('method', 'lanczos')
+
+        result = process_image(filename, 'upscale', method=method)
+        return result
+
+    except KeyError as e:
+        return jsonify({'success': False, 'error': f'Missing parameter: {str(e)}'}), 400
+    except FileNotFoundError:
+        return jsonify({'success': False, 'error': 'Image not found'}), 404
+    except ValueError as e:
+        return jsonify({'success': False, 'error': str(e)}), 400
+    except Exception as e:
+        print(e)
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

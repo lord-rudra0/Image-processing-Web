@@ -11,6 +11,7 @@ const UpscaleImage = () => {
     const [loading, setLoading] = useState(false);
     const [imageUploaded, setImageUploaded] = useState(false);
     const [upscaleMethod, setUpscaleMethod] = useState('lanczos'); // Default to Lanczos
+    const [showImage, setShowImage] = useState(false); // New state for toggling image visibility
     const imageRef = useRef(null);
 
     const onDrop = useCallback(async (acceptedFiles) => {
@@ -40,26 +41,23 @@ const UpscaleImage = () => {
         setError('');
         setLoading(true);
         try {
-            // Placeholder for actual upscaling logic
-            // In a real implementation, you would send the filename and upscaleMethod to the backend
-            // and receive the upscaled image data.
-            // For now, we'll just simulate the upscaling process.
-            const upscale = (method) => {
-                switch (method) {
-                    case 'nearest':
-                        return 'Simulated Nearest Neighbor Upscaling';
-                    case 'bilinear':
-                        return 'Simulated Bilinear Upscaling';
-                    case 'lanczos':
-                        return 'Simulated Lanczos Upscaling';
-                    default:
-                        return 'Simulated Upscaling';
-                }
-            };
+            const response = await fetch('http://localhost:5000/api/upscale', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    filename: filename,
+                    method: upscaleMethod,
+                }),
+            });
 
-            const upscaledImageData = upscale(upscaleMethod);
-            setUpscaledImage(upscaledImageData); // Set a text for now
-
+            const data = await response.json();
+            if (data.success) {
+                setUpscaledImage(`data:image/jpeg;base64,${data.img}`);
+            } else {
+                setError(data.error || 'Upscale failed');
+            }
         } catch (err) {
             setError(err.message || 'Upscale failed');
             console.error('Upscale failed:', err);
@@ -135,10 +133,14 @@ const UpscaleImage = () => {
                         )
                     )}
 
-                    {upscaledImage && (
+                    {showImage && upscaledImage && (
                         <div>
                             <h3 className="text-lg font-semibold mb-2">Upscaled Image:</h3>
-                            <p>{upscaledImage}</p>
+                            <img
+                                src={upscaledImage}
+                                alt="Upscaled"
+                                className="max-w-full rounded-lg shadow-md transition-opacity duration-300"
+                            />
                         </div>
                     )}
                 </div>
@@ -177,6 +179,16 @@ const UpscaleImage = () => {
                             </button>
                         )}
                     </div>
+
+                    <label className="inline-flex items-center mt-3">
+                        <input
+                            type="checkbox"
+                            className="form-checkbox h-5 w-5 text-blue-600"
+                            checked={showImage}
+                            onChange={() => setShowImage(!showImage)}
+                        />
+                        <span className="ml-2 text-gray-300">Show Upscaled Image</span>
+                    </label>
                 </div>
             </div>
         </div>
