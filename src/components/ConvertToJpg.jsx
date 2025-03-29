@@ -10,6 +10,7 @@ const ConvertToJpg = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [imageUploaded, setImageUploaded] = useState(false);
+  const [showImage, setShowImage] = useState(false); // New state for toggling image visibility
 
   const onDrop = useCallback(async (acceptedFiles) => {
     const imageFile = acceptedFiles[0];

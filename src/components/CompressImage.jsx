@@ -11,6 +11,7 @@ const CompressImage = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [imageUploaded, setImageUploaded] = useState(false);
+  const [showImage, setShowImage] = useState(false);
 
   const onDrop = useCallback(async (acceptedFiles) => {
     const imageFile = acceptedFiles[0];
@@ -127,7 +128,37 @@ const CompressImage = () => {
               </div>
             )}
 
-            {compressedImage && (
+            <div className="flex justify-between items-center mb-2">
+              <button
+                onClick={handleCompress}
+                className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-colors duration-300 ${
+                  loading ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
+                disabled={loading || !filename}
+              >
+                {loading ? 'Compress...' : 'Compress'}
+              </button>
+              {compressedImage && (
+                <button
+                  onClick={handleDownload}
+                  className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ml-2"
+                >
+                  Download
+                </button>
+              )}
+            </div>
+
+            <label className="inline-flex items-center mt-3">
+              <input
+                type="checkbox"
+                className="form-checkbox h-5 w-5 text-blue-600"
+                checked={showImage}
+                onChange={() => setShowImage(!showImage)}
+              />
+              <span className="ml-2 text-gray-300">Show Compressed Image</span>
+            </label>
+
+            {showImage && compressedImage && (
               <div>
                 <h3 className="text-lg font-semibold mb-2">Compressed Image:</h3>
                 <img
@@ -135,12 +166,6 @@ const CompressImage = () => {
                   alt="Compressed"
                   className="max-w-full rounded-lg shadow-md transition-opacity duration-300"
                 />
-                <button
-                  onClick={handleDownload}
-                  className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4"
-                >
-                  Download Compressed Image
-                </button>
               </div>
             )}
           </div>
@@ -160,16 +185,6 @@ const CompressImage = () => {
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
             />
           </div>
-
-          <button
-            onClick={handleCompress}
-            className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-colors duration-300 ${
-              loading ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
-            disabled={loading || !filename}
-          >
-            {loading ? 'Compressing...' : 'Compress'}
-          </button>
         </div>
       </div>
     </div>
