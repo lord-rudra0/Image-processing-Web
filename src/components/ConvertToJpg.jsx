@@ -59,7 +59,7 @@ const ConvertToJpg = () => {
       {error && <div className="text-red-500 mb-4">{error}</div>}
 
       <div className="flex">
-        <div className="w-1/2">
+        <div className="w-1/2 flex flex-col items-center">
           {!imageUploaded && (
             <div
               {...getRootProps()}
@@ -115,35 +115,33 @@ const ConvertToJpg = () => {
             </div>
           )}
 
-          <div className="flex flex-col items-center">
-            {selectedImage && (
-              <div className="mb-4">
-                <h3 className="text-lg font-semibold mb-2">Uploaded Image:</h3>
-                <img
-                  src={selectedImage}
-                  alt="Uploaded"
-                  className="max-w-full rounded-lg shadow-md transition-opacity duration-300"
-                />
-              </div>
-            )}
+          {selectedImage && (
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold mb-2">Uploaded Image:</h3>
+              <img
+                src={selectedImage}
+                alt="Uploaded"
+                className="max-w-full rounded-lg shadow-md transition-opacity duration-300"
+              />
+            </div>
+          )}
 
-            {convertedImage && (
-              <div>
-                <h3 className="text-lg font-semibold mb-2">Converted Image:</h3>
-                <img
-                  src={convertedImage}
-                  alt="Converted"
-                  className="max-w-full rounded-lg shadow-md transition-opacity duration-300"
-                />
-                <button
-                  onClick={handleDownload}
-                  className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4"
-                >
-                  Download Converted Image
-                </button>
-              </div>
-            )}
-          </div>
+          {convertedImage && (
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Converted Image:</h3>
+              <img
+                src={convertedImage}
+                alt="Converted"
+                className="max-w-full rounded-lg shadow-md transition-opacity duration-300"
+              />
+              <button
+                onClick={handleDownload}
+                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4"
+              >
+                Download Converted Image
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="w-1/2 p-4">

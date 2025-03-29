@@ -63,7 +63,7 @@ const CropImage = () => {
       {error && <div className="text-red-500 mb-4">{error}</div>}
 
       <div className="flex">
-        <div className="w-1/2">
+        <div className="w-1/2 flex flex-col items-center">
           {!imageUploaded && (
             <div
               {...getRootProps()}
@@ -119,62 +119,50 @@ const CropImage = () => {
             </div>
           )}
 
-          <div className="flex flex-col items-center">
-            {selectedImage && (
-              <div className="mb-4">
-                <h3 className="text-lg font-semibold mb-2">Uploaded Image:</h3>
-                <img
-                  src={selectedImage}
-                  alt="Uploaded"
-                  className="max-w-full rounded-lg shadow-md transition-opacity duration-300"
-                />
-              </div>
-            )}
-
-            <div className="flex justify-between items-center mb-2">
-              <button
-                onClick={handleCrop}
-                className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-colors duration-300 ${
-                  loading ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
-                disabled={loading || !filename}
-              >
-                {loading ? 'Cropping...' : 'Crop'}
-              </button>
-              {croppedImage && (
-                <button
-                  onClick={handleDownload}
-                  className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ml-2"
-                >
-                  Download
-                </button>
-              )}
-            </div>
-
-            <label className="inline-flex items-center mt-3">
-              <input
-                type="checkbox"
-                className="form-checkbox h-5 w-5 text-blue-600"
-                checked={showImage}
-                onChange={() => setShowImage(!showImage)}
+          {selectedImage && (
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold mb-2">Uploaded Image:</h3>
+              <img
+                src={selectedImage}
+                alt="Uploaded"
+                className="max-w-full rounded-lg shadow-md transition-opacity duration-300"
               />
-              <span className="ml-2 text-gray-300">Show Cropped Image</span>
-            </label>
+            </div>
+          )}
 
-            {showImage && croppedImage && (
-              <div>
-                <h3 className="text-lg font-semibold mb-2">Cropped Image:</h3>
-                <img
-                  src={croppedImage}
-                  alt="Cropped"
-                  className="max-w-full rounded-lg shadow-md transition-opacity duration-300"
-                />
-              </div>
-            )}
-          </div>
+          {showImage && croppedImage && (
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Cropped Image:</h3>
+              <img
+                src={croppedImage}
+                alt="Cropped"
+                className="max-w-full rounded-lg shadow-md transition-opacity duration-300"
+              />
+            </div>
+          )}
         </div>
 
-        <div className="w-1/2 p-4">
+        <div className="w-1/2 p-4 flex flex-col justify-start">
+          <div className="flex justify-between items-center mb-4">
+            <button
+              onClick={handleCrop}
+              className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-colors duration-300 ${
+                loading ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+              disabled={loading || !filename}
+            >
+              {loading ? 'Cropping...' : 'Crop'}
+            </button>
+            {croppedImage && (
+              <button
+                onClick={handleDownload}
+                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ml-2"
+              >
+                Download
+              </button>
+            )}
+          </div>
+
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div>
               <label className="block text-gray-300 text-sm font-bold mb-2" htmlFor="left">
