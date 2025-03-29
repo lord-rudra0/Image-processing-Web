@@ -243,61 +243,101 @@ const ImageEditor = () => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-      <div className="grid grid-cols-1 lg:grid-cols-2">
+    <div className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
         {/* Image Preview Section */}
-        <div className="p-6 bg-gray-50">
-          <div className="aspect-w-16 aspect-h-9 bg-gray-100 rounded-lg overflow-hidden">
-            {!image ? (
-              <ImageDropzone onImageUpload={handleImageUpload} />
-            ) : (
-              <img 
-                src={image} 
-                alt="Edited"
+        <div className="space-y-6">
+          {image ? (
+            <div className="relative group">
+              <img
+                src={image}
+                alt="Preview"
+                className="w-full h-auto rounded-lg shadow-md transition-transform duration-300 group-hover:scale-[1.02]"
                 style={{ filter: getCSSFilters() }}
-                className="w-full h-full object-contain"
               />
-            )}
-          </div>
-          
-          {/* Image Actions */}
-          {image && (
-            <div className="mt-4 flex justify-center space-x-4">
-              <ActionButton
-                variant="danger"
-                onClick={resetFilters}
-                disabled={loading}
-              >
-                Reset Filters
-              </ActionButton>
-              <ActionButton
-                variant="success"
-                onClick={handleDownload}
-                disabled={loading}
-              >
-                Download Image
-              </ActionButton>
+              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 rounded-lg" />
             </div>
+          ) : (
+            <ImageDropzone
+              onImageUpload={handleImageUpload}
+              className="transform transition-all duration-300 hover:scale-[1.02]"
+            />
           )}
+
+          {/* Action Buttons */}
+          <div className="flex gap-4 justify-end">
+            <button
+              onClick={resetFilters}
+              disabled={!image}
+              className={`
+                flex items-center px-4 py-2 rounded-lg font-medium
+                transition-all duration-300 transform
+                ${!image 
+                  ? 'opacity-50 cursor-not-allowed bg-gray-100 text-gray-400'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105 active:scale-95'
+                }
+              `}
+            >
+              <svg 
+                className="w-4 h-4 mr-2 transition-transform duration-300 hover:rotate-180" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Reset Filters
+            </button>
+            
+            <button
+              onClick={handleDownload}
+              disabled={!image}
+              className={`
+                flex items-center px-4 py-2 rounded-lg font-medium
+                transition-all duration-300 transform
+                ${!image 
+                  ? 'opacity-50 cursor-not-allowed bg-blue-100 text-blue-400'
+                  : 'bg-blue-500 text-white hover:bg-blue-600 hover:scale-105 active:scale-95'
+                }
+              `}
+            >
+              <svg 
+                className="w-4 h-4 mr-2 animate-bounce" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              Download
+            </button>
+          </div>
         </div>
 
         {/* Controls Section */}
-        <div className="p-6 border-t lg:border-t-0 lg:border-l border-gray-200">
-          {/* Filter Tabs */}
-          <div className="flex flex-wrap gap-2 mb-6">
-            {Object.entries(filterTabs).map(([key, tab]) => (
-              <TabButton
-                key={key}
-                active={activeTab === key}
-                onClick={() => setActiveTab(key)}
+        <div className="space-y-6">
+          {/* Filter Categories */}
+          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+            {Object.keys(filterTabs).map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`
+                  px-4 py-2 rounded-lg font-medium whitespace-nowrap
+                  transition-all duration-300 transform
+                  ${activeTab === tab
+                    ? 'bg-blue-500 text-white scale-105'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105'
+                  }
+                `}
               >
-                {tab.title}
-              </TabButton>
+                {filterTabs[tab].title}
+              </button>
             ))}
           </div>
 
           {/* Filter Controls */}
-          <div className="space-y-6">
+          <div className="bg-gray-50 rounded-xl p-6 transition-all duration-300 hover:shadow-md">
             {activeTab === 'basic' ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {filterTabs.basic.controls.map(control => (
@@ -333,28 +373,34 @@ const ImageEditor = () => {
             )}
           </div>
 
-          {/* Add this section for filter information display */}
+          {/* Filter Information */}
           {selectedFilter && filterInfo[selectedFilter] && (
-            <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            <div className="bg-gray-50 rounded-xl p-6 transition-all duration-300 hover:shadow-md animate-fadeIn">
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">
                 {filterInfo[selectedFilter].title}
               </h3>
-              <p className="text-gray-600 mb-3">
+              <p className="text-gray-600 mb-4 leading-relaxed">
                 {filterInfo[selectedFilter].description}
               </p>
               {filterInfo[selectedFilter].usage && (
-                <div className="mb-3">
-                  <h4 className="text-sm font-semibold text-gray-700">Usage:</h4>
-                  <p className="text-gray-600">{filterInfo[selectedFilter].usage}</p>
+                <div className="mb-4">
+                  <h4 className="text-sm font-semibold text-gray-700 mb-2">Usage:</h4>
+                  <p className="text-gray-600 leading-relaxed">
+                    {filterInfo[selectedFilter].usage}
+                  </p>
                 </div>
               )}
               {filterInfo[selectedFilter].parameters && (
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-700">Parameters:</h4>
-                  <ul className="list-disc list-inside text-gray-600">
+                  <h4 className="text-sm font-semibold text-gray-700 mb-2">Parameters:</h4>
+                  <ul className="space-y-2">
                     {Object.entries(filterInfo[selectedFilter].parameters).map(([key, value]) => (
-                      <li key={key} className="ml-2">
-                        <span className="font-medium">{key}:</span> {value}
+                      <li 
+                        key={key}
+                        className="flex items-center text-gray-600 bg-white rounded-lg p-3 transition-all duration-300 hover:shadow-sm"
+                      >
+                        <span className="font-medium mr-2">{key}:</span>
+                        <span>{value}</span>
                       </li>
                     ))}
                   </ul>
@@ -362,49 +408,18 @@ const ImageEditor = () => {
               )}
             </div>
           )}
-
-          {/* Loading Indicator */}
-          {loading && (
-            <div className="mt-4 flex items-center justify-center text-blue-500">
-              <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-              </svg>
-              Processing...
-            </div>
-          )}
         </div>
       </div>
 
-      {/* <FilterInfo 
-        isOpen={selectedFilter !== null}
-        onClose={() => setSelectedFilter(null)}
-        filterInfo={selectedFilter && filterInfo[selectedFilter] ? filterInfo[selectedFilter] : null}
-      /> */}
-
-      {/* Add reset button */}
-      <div className="flex justify-end p-4 border-t border-gray-200">
-        <button
-          onClick={resetFilters}
-          className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
-          disabled={!image}
-        >
-          <svg 
-            className="w-4 h-4 mr-2" 
-            fill="none" 
-            viewBox="0 0 24 24" 
-            stroke="currentColor"
-          >
-            <path 
-              strokeLinecap="round" 
-              strokeLinejoin="round" 
-              strokeWidth={2} 
-              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" 
-            />
-          </svg>
-          Reset Filters
-        </button>
-      </div>
+      {/* Loading Overlay */}
+      {loading && (
+        <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center backdrop-blur-sm transition-all duration-300">
+          <div className="flex flex-col items-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mb-4"></div>
+            <p className="text-blue-500 font-medium animate-pulse">Processing...</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
