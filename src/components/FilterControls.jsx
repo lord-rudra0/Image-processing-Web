@@ -12,7 +12,7 @@ const FilterControls = ({
     <div className="bg-gray-800/90 rounded-2xl p-6 border border-gray-700/50 shadow-2xl backdrop-blur-sm">
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center space-x-3">
-          <Sliders className="w-5 h-5 text-blue-400" />
+          <Sliders className="w-5 h-5 text-blue-400 animate-pulse" />
           <h2 className="text-xl font-semibold text-gray-100">Adjustments</h2>
         </div>
         <button
@@ -45,14 +45,19 @@ const FilterControls = ({
                       {values[filter.name]}{filter.unit}
                     </span>
                   </label>
-                  <input
-                    type="range"
-                    min={filter.min}
-                    max={filter.max}
-                    value={values[filter.name]}
-                    onChange={(e) => onChange(filter.name, e.target.value)}
-                    className="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-blue-500 transition-all duration-300 hover:bg-gray-500"
-                  />
+                  <div className="relative">
+                    <input
+                      type="range"
+                      min={filter.min}
+                      max={filter.max}
+                      value={values[filter.name]}
+                      onChange={(e) => onChange(filter.name, e.target.value)}
+                      className="slider-thumb w-full h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-blue-500 transition-all duration-300 hover:bg-gray-500"
+                    />
+                    <div className="absolute top-0 left-0 h-1 bg-blue-500 rounded-lg pointer-events-none transition-all duration-300"
+                      style={{ width: `${((values[filter.name] - filter.min) / (filter.max - filter.min)) * 100}%` }}
+                    ></div>
+                  </div>
                 </div>
               ))}
             </div>

@@ -315,21 +315,25 @@ const ImageEditor = () => {
           {/* Controls Section */}
           <div className="space-y-8">
             {/* Filter Categories */}
-            <div className="flex gap-3 overflow-x-auto pb-3">
+            <div className="relative flex gap-3 overflow-x-auto pb-3 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-800">
               {Object.keys(filterTabs).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
                   className={`
-                    px-5 py-3 rounded-xl font-medium whitespace-nowrap
+                    relative px-5 py-3 rounded-xl font-medium whitespace-nowrap
                     transition-all duration-300
                     ${activeTab === tab
-                      ? 'bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-lg hover:-translate-y-1'
-                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-700 shadow-lg hover:shadow-xl hover:-translate-y-1'
+                      ? 'bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-lg transform scale-105'
+                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-700 shadow-lg hover:shadow-xl'
                     }
+                    focus:outline-none focus:ring-2 focus:ring-blue-500
                   `}
                 >
                   {filterTabs[tab].title}
+                  {activeTab === tab && (
+                    <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-6 h-1 bg-blue-500 rounded-full"></span>
+                  )}
                 </button>
               ))}
             </div>
