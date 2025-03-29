@@ -37,39 +37,51 @@ const Home = () => {
 
     return (
         <div className="container mx-auto p-6 pt-24">
-            <div className="text-center mb-16">
-                <h1 className="text-4xl font-bold text-white mb-4">Welcome to I❤IMG</h1>
-                <p className="text-lg text-gray-400 max-w-2xl mx-auto">
+            {/* Hero Section */}
+            <div className="text-center mb-20">
+                <h1 className="text-4xl font-bold text-white mb-6">Welcome to I❤IMG</h1>
+                <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-12">
                     Your all-in-one image processing solution. Optimize, convert, and edit images with ease.
                 </p>
+
+                {/* Why Choose Us Section */}
+                <div className="bg-gray-800/50 rounded-xl p-8">
+                    <h2 className="text-2xl font-bold text-white mb-8">Why Choose I❤IMG?</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="p-6 bg-gray-800/30 rounded-lg">
+                            <h3 className="text-xl font-semibold text-white mb-3">Fast Processing</h3>
+                            <p className="text-gray-400">
+                                Our advanced algorithms ensure quick image processing without compromising quality.
+                            </p>
+                        </div>
+                        <div className="p-6 bg-gray-800/30 rounded-lg">
+                            <h3 className="text-xl font-semibold text-white mb-3">Easy to Use</h3>
+                            <p className="text-gray-400">
+                                Simple and intuitive interface makes image editing accessible to everyone.
+                            </p>
+                        </div>
+                        <div className="p-6 bg-gray-800/30 rounded-lg">
+                            <h3 className="text-xl font-semibold text-white mb-3">Secure & Private</h3>
+                            <p className="text-gray-400">
+                                Your images are processed securely and never stored on our servers.
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {features.map((feature, index) => (
-                    <Card
-                        key={index}
-                        title={feature.title}
-                        description={feature.description}
-                        path={feature.path}
-                    />
-                ))}
-            </div>
-
-            <div className="mt-16 text-center">
-                <h2 className="text-2xl font-bold text-white mb-4">Why Choose I❤IMG?</h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-gray-400">
-                    <div className="p-6 bg-gray-800/50 rounded-xl">
-                        <h3 className="text-xl font-semibold text-white mb-3">Fast Processing</h3>
-                        <p>Our advanced algorithms ensure quick image processing without compromising quality.</p>
-                    </div>
-                    <div className="p-6 bg-gray-800/50 rounded-xl">
-                        <h3 className="text-xl font-semibold text-white mb-3">Easy to Use</h3>
-                        <p>Simple and intuitive interface makes image editing accessible to everyone.</p>
-                    </div>
-                    <div className="p-6 bg-gray-800/50 rounded-xl">
-                        <h3 className="text-xl font-semibold text-white mb-3">Secure & Private</h3>
-                        <p>Your images are processed securely and never stored on our servers.</p>
-                    </div>
+            {/* Features Section */}
+            <div className="mb-16">
+                <h2 className="text-2xl font-bold text-white mb-8 text-center">Our Features</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {features.map((feature, index) => (
+                        <Card
+                            key={index}
+                            title={feature.title}
+                            description={feature.description}
+                            path={feature.path}
+                        />
+                    ))}
                 </div>
             </div>
         </div>
