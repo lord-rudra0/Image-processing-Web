@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 import io
 import base64
+import os
 from utils.image_processing import (
     apply_threshold,
     apply_edge_detection,
@@ -17,6 +18,11 @@ from utils.image_processing import (
 
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
+
+UPLOAD_FOLDER = 'uploads'
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 def base64_to_image(base64_string):
     try:
@@ -146,6 +152,128 @@ def test():
         'status': 'success',
         'message': 'Server is running'
     })
+
+@app.route('/api/upload', methods=['POST'])
+def upload_image():
+    if 'image' not in request.files:
+        return jsonify({'error': 'No image provided'}), 400
+
+    image = request.files['image']
+    if image.filename == '':
+        return jsonify({'error': 'No image selected'}), 400
+
+    try:
+        img = Image.open(image)
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
+        img.save(filepath)
+        return jsonify({'message': 'Image uploaded successfully', 'filename': image.filename}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/compress', methods=['POST'])
+def compress_image():
+    data = request.get_json()
+    filename = data.get('filename')
+    quality = data.get('quality', 85)  # Default quality
+
+    if not filename:
+        return jsonify({'error': 'No filename provided'}), 400
+
+    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    if not os.path.exists(filepath):
+        return jsonify({'error': 'Image not found'}), 404
+
+    try:
+        img = Image.open(filepath)
+        compressed_buffer = io.BytesIO()
+        img.save(compressed_buffer, format="JPEG", optimize=True, quality=quality)
+        compressed_buffer.seek(0)
+        # Convert to base64 string
+        img_byte_arr = compressed_buffer.read()
+        img_str = base64.b64encode(img_byte_arr).decode('utf-8')
+        return jsonify({'image': img_str, 'message': 'Image compressed successfully'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/resize', methods=['POST'])
+def resize_image():
+    data = request.get_json()
+    filename = data.get('filename')
+    width = data.get('width')
+    height = data.get('height')
+
+    if not filename or not width or not height:
+        return jsonify({'error': 'Filename, width, and height are required'}), 400
+
+    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    if not os.path.exists(filepath):
+        return jsonify({'error': 'Image not found'}), 404
+
+    try:
+        img = Image.open(filepath)
+        img = img.resize((width, height))
+        resized_buffer = io.BytesIO()
+        img.save(resized_buffer, format="JPEG")
+        resized_buffer.seek(0)
+        # Convert to base64 string
+        img_byte_arr = resized_buffer.read()
+        img_str = base64.b64encode(img_byte_arr).decode('utf-8')
+        return jsonify({'image':  img_str, 'message': 'Image resized successfully'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/crop', methods=['POST'])
+def crop_image():
+    data = request.get_json()
+    filename = data.get('filename')
+    left = data.get('left')
+    top = data.get('top')
+    right = data.get('right')
+    bottom = data.get('bottom')
+
+    if not filename or not all([left, top, right, bottom]):
+        return jsonify({'error': 'Filename and crop coordinates are required'}), 400
+
+    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    if not os.path.exists(filepath):
+        return jsonify({'error': 'Image not found'}), 404
+
+    try:
+        img = Image.open(filepath)
+        img = img.crop((left, top, right, bottom))
+        cropped_buffer = io.BytesIO()
+        img.save(cropped_buffer, format="JPEG")
+        cropped_buffer.seek(0)
+        # Convert to base64 string
+        img_byte_arr = cropped_buffer.read()
+        img_str = base64.b64encode(img_byte_arr).decode('utf-8')
+        return jsonify({'image': img_str, 'message': 'Image cropped successfully'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/convert-to-jpg', methods=['POST'])
+def convert_to_jpg():
+    data = request.get_json()
+    filename = data.get('filename')
+
+    if not filename:
+        return jsonify({'error': 'No filename provided'}), 400
+
+    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    if not os.path.exists(filepath):
+        return jsonify({'error': 'Image not found'}), 404
+
+    try:
+        img = Image.open(filepath)
+        jpg_buffer = io.BytesIO()
+        img.convert('RGB').save(jpg_buffer, format="JPEG")
+        jpg_buffer.seek(0)
+        # Convert to base64 string
+        img_byte_arr = jpg_buffer.read()
+        img_str = base64.b64encode(img_byte_arr).decode('utf-8')
+        return jsonify({'image': img_str, 'message': 'Image converted to JPG successfully'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

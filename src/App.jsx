@@ -1,14 +1,25 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Layout from './components/Layout';
 import ImageEditor from './components/ImageEditor';
 import Home from './components/Home';
+import CompressImage from './components/CompressImage';
+import ResizeImage from './components/ResizeImage';
+import CropImage from './components/CropImage';
+import ConvertToJpg from './components/ConvertToJpg';
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route
+          path="/"
+          element={
+            <Layout>
+              <Home />
+            </Layout>
+          }
+        />
         <Route
           path="/photo-editor"
           element={
@@ -21,7 +32,7 @@ function App() {
           path="/compress-image"
           element={
             <Layout>
-              <div>Compress Image Page</div>
+              <CompressImage />
             </Layout>
           }
         />
@@ -29,7 +40,7 @@ function App() {
           path="/resize-image"
           element={
             <Layout>
-              <div>Resize Image Page</div>
+              <ResizeImage />
             </Layout>
           }
         />
@@ -37,7 +48,7 @@ function App() {
           path="/crop-image"
           element={
             <Layout>
-              <div>Crop Image Page</div>
+              <CropImage />
             </Layout>
           }
         />
@@ -45,7 +56,7 @@ function App() {
           path="/convert-to-jpg"
           element={
             <Layout>
-              <div>Convert to JPG Page</div>
+              <ConvertToJpg />
             </Layout>
           }
         />
