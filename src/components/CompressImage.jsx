@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { compressImage, uploadImage } from '../api/imageService';
 import downloadImage from '../utils/download';
 import { useDropzone } from 'react-dropzone';
+import { motion } from 'framer-motion';
 
 const CompressImage = () => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -15,20 +16,17 @@ const CompressImage = () => {
   const [originalSize, setOriginalSize] = useState(null);
   const [compressedSize, setCompressedSize] = useState(null);
   const [savedPercentage, setSavedPercentage] = useState(null);
-  const [showSizeComparison, setShowSizeComparison] = useState(false);
+  const [showResults, setShowResults] = useState(false);
 
   const onDrop = useCallback(async (acceptedFiles) => {
     const imageFile = acceptedFiles[0];
     setSelectedImage(URL.createObjectURL(imageFile));
-    setFilename(imageFile.name);
-    setOriginalSize(imageFile.size);
-    setShowSizeComparison(false);
-    setImageUploaded(true);
 
     try {
       setLoading(true);
       const data = await uploadImage(imageFile);
-      setFilename(data.filename);
+      setFilename(data.filename); // Set the filename from the upload response
+      setImageUploaded(true); // Set imageUploaded to true after successful upload
     } catch (err) {
       setError(err.message || 'Image upload failed');
       console.error('Image upload failed:', err);
@@ -43,41 +41,33 @@ const CompressImage = () => {
     multiple: false,
   });
 
-  const handleCompress = async () => {
+  const handleCompression = async () => {
     setError('');
     setLoading(true);
     try {
-      const formData = new FormData();
-      formData.append('image', selectedImage);
-      formData.append('filename', filename);
-      formData.append('quality', quality);
+      const response = await compressImage(filename, quality);
 
-      const response = await compressImage(formData);
-
-      if (response.error) {
-        setError(response.error);
-        setLoading(false);
-        return;
+      if (response.success) {
+        setCompressedImage(`data:image/jpeg;base64,${response.img}`);
+        setOriginalSize(response.original_size);
+        setCompressedSize(response.compressed_size);
+        const percentage = Math.round(((response.original_size - response.compressed_size) / response.original_size) * 100);
+        setSavedPercentage(percentage);
+        setShowResults(true);
+      } else {
+        setError(response.error || 'Compression failed');
+        setShowResults(false);
       }
-
-      setCompressedImage(response.processedImage);
-
-      const compressedImageSize = atob(response.processedImage.split(',')[1]).length;
-      setCompressedSize(compressedImageSize);
-
-      const percentageSaved = ((originalSize - compressedImageSize) / originalSize) * 100;
-      setSavedPercentage(percentageSaved.toFixed(2));
-
-      setShowSizeComparison(true);
-      setLoading(false);
     } catch (err) {
-      setError('An error occurred during image compression.');
+      setError('An error occurred during compression.');
+      setShowResults(false);
+    } finally {
       setLoading(false);
     }
   };
 
   const handleDownload = () => {
-    downloadImage(compressedImage, `compressed_${filename}`);
+    downloadImage(compressedImage, 'compressed_image.jpg');
   };
 
   return (
@@ -168,7 +158,7 @@ const CompressImage = () => {
         <div className="w-1/2 p-4 flex flex-col justify-start">
           <div className="flex justify-between items-center mb-4">
             <button
-              onClick={handleCompress}
+              onClick={handleCompression}
               className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-colors duration-300 ${
                 loading ? 'opacity-50 cursor-not-allowed' : ''
               }`}
@@ -210,18 +200,23 @@ const CompressImage = () => {
             <span className="ml-2 text-gray-300">Show Compressed Image</span>
           </label>
 
-          {showSizeComparison && (
-            <div className="mt-4">
-              <p className="text-green-500">
+          {showResults && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="mt-4 text-green-500"
+            >
+              <p className="text-lg font-semibold">
                 Saved {savedPercentage}%
               </p>
-              <p>
-                Your Images are now {savedPercentage}% smaller!
+              <p className="text-sm">
+                Your image is now {savedPercentage}% smaller!
               </p>
-              <p>
-                {originalSize && (originalSize / 1024).toFixed(2)} KB → {(compressedSize / 1024).toFixed(2)} KB
+              <p className="text-xs text-gray-400">
+                {originalSize} KB <span aria-hidden="true">→</span> {compressedSize} KB
               </p>
-            </div>
+            </motion.div>
           )}
         </div>
       </div>
