@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from 'react-router-dom';
 
 export default function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -6,19 +7,19 @@ export default function Navbar() {
   return (
     <nav className="flex items-center justify-between px-8 py-6 bg-gray-900 shadow-2xl">
       {/* Logo */}
-      <div className="text-xl font-bold flex items-center text-gray-100">
+      <Link to="/" className="text-xl font-bold flex items-center text-gray-100">
         <span className="text-gray-100">I</span>
         <span className="text-blue-500">❤</span>
         <span className="text-gray-100">IMG</span>
-      </div>
+      </Link>
 
       {/* Nav Links */}
       <div className="hidden md:flex space-x-8 text-gray-300 font-medium">
-        <a href="#" className="hover:text-gray-200 transition-colors duration-200">COMPRESS IMAGE</a>
-        <a href="#" className="hover:text-gray-200 transition-colors duration-200">RESIZE IMAGE</a>
-        <a href="#" className="hover:text-gray-200 transition-colors duration-200">CROP IMAGE</a>
-        <a href="#" className="hover:text-gray-200 transition-colors duration-200">CONVERT TO JPG</a>
-        <a href="#" className="text-blue-500 hover:text-blue-400 transition-colors duration-200">PHOTO EDITOR</a>
+        <Link to="/compress-image" className="hover:text-gray-200 transition-colors duration-200">COMPRESS IMAGE</Link>
+        <Link to="/resize-image" className="hover:text-gray-200 transition-colors duration-200">RESIZE IMAGE</Link>
+        <Link to="/crop-image" className="hover:text-gray-200 transition-colors duration-200">CROP IMAGE</Link>
+        <Link to="/convert-to-jpg" className="hover:text-gray-200 transition-colors duration-200">CONVERT TO JPG</Link>
+        <Link to="/photo-editor" className="text-blue-500 hover:text-blue-400 transition-colors duration-200">PHOTO EDITOR</Link>
 
         {/* Dropdown */}
         <div className="relative">
@@ -33,24 +34,24 @@ export default function Navbar() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <h4 className="font-semibold text-gray-200 mb-2">OPTIMIZE</h4>
-                  <a href="#" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Compress IMAGE</a>
+                  <Link to="/compress-image" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Compress IMAGE</Link>
                   <a href="#" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Upscale</a>
                   <a href="#" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Remove background</a>
                 </div>
                 <div>
                   <h4 className="font-semibold text-gray-200 mb-2">CREATE</h4>
                   <a href="#" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Meme generator</a>
-                  <a href="#" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Photo editor</a>
+                  <Link to="/photo-editor" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Photo editor</Link>
                 </div>
                 <div>
                   <h4 className="font-semibold text-gray-200 mb-2">MODIFY</h4>
-                  <a href="#" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Resize IMAGE</a>
-                  <a href="#" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Crop IMAGE</a>
+                  <Link to="/resize-image" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Resize IMAGE</Link>
+                  <Link to="/crop-image" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Crop IMAGE</Link>
                   <a href="#" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Rotate IMAGE</a>
                 </div>
                 <div>
                   <h4 className="font-semibold text-gray-200 mb-2">CONVERT</h4>
-                  <a href="#" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Convert to JPG</a>
+                  <Link to="/convert-to-jpg" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Convert to JPG</Link>
                   <a href="#" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Convert from JPG</a>
                   <a href="#" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">HTML to IMAGE</a>
                 </div>
