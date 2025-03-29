@@ -7,6 +7,7 @@ import CompressImage from './components/CompressImage';
 import ResizeImage from './components/ResizeImage';
 import CropImage from './components/CropImage';
 import ConvertToJpg from './components/ConvertToJpg';
+import UpscaleImage from './components/UpscaleImage';
 
 function App() {
   return (
@@ -57,6 +58,14 @@ function App() {
           element={
             <Layout>
               <ConvertToJpg />
+            </Layout>
+          }
+        />
+        <Route
+          path="/upscale-image"
+          element={
+            <Layout>
+              <UpscaleImage />
             </Layout>
           }
         />

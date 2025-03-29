@@ -21,6 +21,7 @@ export default function Navbar() {
         <Link to="/crop-image" className="hover:text-gray-200 transition-colors duration-200">CROP IMAGE</Link>
         <Link to="/convert-to-jpg" className="hover:text-gray-200 transition-colors duration-200">CONVERT TO JPG</Link>
         <Link to="/photo-editor" className="text-blue-500 hover:text-blue-400 transition-colors duration-200">PHOTO EDITOR</Link>
+        <Link to="/upscale-image" className="hover:text-gray-200 transition-colors duration-200">UPSCALE IMAGE</Link>
 
         {/* Dropdown */}
         <div className="relative">
