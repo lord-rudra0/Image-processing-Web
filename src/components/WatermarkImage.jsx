@@ -10,7 +10,7 @@ const WatermarkImage = () => {
     const [watermarkImage, setWatermarkImage] = useState(null);
     const [watermarkFilename, setWatermarkFilename] = useState('');
     const [watermarkedImage, setWatermarkedImage] = useState(null);
-    const [position, setPosition] = useState('bottom_right');
+    // const [position, setPosition] = useState('bottom_right');
     const [opacity, setOpacity] = useState(0.5);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -24,8 +24,8 @@ const WatermarkImage = () => {
     const [height, setHeight] = useState(100);
     const [overlayPosition, setOverlayPosition] = useState({ x: 0, y: 0 });
     const [overlaySize, setOverlaySize] = useState({ width: 100, height: 100 });
-    const [isDragging, setIsDragging] = useState(false);
-    const [isResizing, setIsResizing] = useState(false);
+    // const [isDragging, setIsDragging] = useState(false);
+    // const [isResizing, setIsResizing] = useState(false);
 
     const onDrop = useCallback(async (acceptedFiles) => {
         const imageFile = acceptedFiles[0];
