@@ -8,6 +8,7 @@ import ResizeImage from './components/ResizeImage';
 import CropImage from './components/CropImage';
 import ConvertToJpg from './components/ConvertToJpg';
 import UpscaleImage from './components/UpscaleImage';
+import RemoveBackground from './components/RemoveBackground';
 
 function App() {
   return (
@@ -66,6 +67,14 @@ function App() {
           element={
             <Layout>
               <UpscaleImage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/remove-background"
+          element={
+            <Layout>
+              <RemoveBackground />
             </Layout>
           }
         />

@@ -16,6 +16,7 @@ from utils.image_processing import (
     apply_geometric_transform
 )
 from skimage.transform import resize
+from rembg import remove
 
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
@@ -100,6 +101,13 @@ def process_image(filename, operation, **kwargs):
             resized_img = Image.fromarray((resized_array * 255).astype(np.uint8))
             img_io = io.BytesIO()
             resized_img.save(img_io, img_format)
+            compressed_size = img_io.tell()
+            img_io.seek(0)
+            img_base64 = base64.b64encode(img_io.read()).decode('utf-8')
+        elif operation == 'remove-background':
+            img = remove(img)
+            img_io = io.BytesIO()
+            img.save(img_io, 'PNG')  # Save as PNG to preserve transparency
             compressed_size = img_io.tell()
             img_io.seek(0)
             img_base64 = base64.b64encode(img_io.read()).decode('utf-8')
@@ -351,6 +359,25 @@ def upscale_image():
         method = data.get('method', 'lanczos')
 
         result = process_image(filename, 'upscale', method=method)
+        return result
+
+    except KeyError as e:
+        return jsonify({'success': False, 'error': f'Missing parameter: {str(e)}'}), 400
+    except FileNotFoundError:
+        return jsonify({'success': False, 'error': 'Image not found'}), 404
+    except ValueError as e:
+        return jsonify({'success': False, 'error': str(e)}), 400
+    except Exception as e:
+        print(e)
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/remove-background', methods=['POST'])
+def remove_background():
+    try:
+        data = request.get_json()
+        filename = data['filename']
+
+        result = process_image(filename, 'remove-background')
         return result
 
     except KeyError as e:
