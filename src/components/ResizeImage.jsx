@@ -41,8 +41,13 @@ const ResizeImage = () => {
     setError('');
     setLoading(true);
     try {
-      const data = await resizeImage(filename, width, height);
-      setResizedImage(`data:image/jpeg;base64,${data.image}`);
+      const response = await resizeImage(filename, width, height);
+      if (response && response.success) {
+        setResizedImage(`data:image/jpeg;base64,${response.img}`);
+      } else {
+        setError(response.error || 'Resize failed');
+        console.error('Resize failed:', response.error);
+      }
     } catch (err) {
       setError(err.message || 'Resize failed');
       console.error('Resize failed:', err);
