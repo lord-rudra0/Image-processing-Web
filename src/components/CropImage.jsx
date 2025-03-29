@@ -18,6 +18,8 @@ const CropImage = () => {
   const [showImage, setShowImage] = useState(false);
   const imageRef = useRef(null);
   const canvasRef = useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
   const aspectRatioOptions = {
     FreeForm: null,
@@ -79,7 +81,7 @@ const CropImage = () => {
 
   useEffect(() => {
     drawCropRectangle();
-  }, [selectedImage, cropWidth, cropHeight, positionX, positionY]);
+  }, [selectedImage, cropWidth, cropHeight, positionX, positionY, isDragging]);
 
   const drawCropRectangle = () => {
     if (!selectedImage || !imageRef.current || !canvasRef.current) return;
@@ -97,6 +99,31 @@ const CropImage = () => {
     ctx.strokeStyle = 'blue';
     ctx.lineWidth = 2;
     ctx.strokeRect(positionX, positionY, cropWidth, cropHeight);
+  };
+
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    setDragStart({ x: e.clientX, y: e.clientY });
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+
+    const deltaX = e.clientX - dragStart.x;
+    const deltaY = e.clientY - dragStart.y;
+
+    setPositionX((prevX) => Math.max(0, Math.min(prevX + deltaX, imageRef.current.naturalWidth - cropWidth)));
+    setPositionY((prevY) => Math.max(0, Math.min(prevY + deltaY, imageRef.current.naturalHeight - cropHeight)));
+
+    setDragStart({ x: e.clientX, y: e.clientY });
+  };
+
+  const handleMouseLeave = () => {
+    setIsDragging(false);
   };
 
   const handleCrop = async () => {
@@ -184,8 +211,12 @@ const CropImage = () => {
                 <h3 className="text-lg font-semibold mb-2">Uploaded Image:</h3>
                 <canvas
                   ref={canvasRef}
-                  className="max-w-full rounded-lg shadow-md transition-opacity duration-300 absolute top-0 left-0"
+                  className="max-w-full rounded-lg shadow-md transition-opacity duration-300 absolute top-0 left-0 cursor-move"
                   style={{ zIndex: 1 }}
+                  onMouseDown={handleMouseDown}
+                  onMouseUp={handleMouseUp}
+                  onMouseMove={handleMouseMove}
+                  onMouseLeave={handleMouseLeave}
                 />
                 <img
                   src={selectedImage}
