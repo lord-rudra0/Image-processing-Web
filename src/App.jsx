@@ -9,6 +9,7 @@ import CropImage from './components/CropImage';
 import ConvertToJpg from './components/ConvertToJpg';
 import UpscaleImage from './components/UpscaleImage';
 import RemoveBackground from './components/RemoveBackground';
+import WatermarkImage from './components/WatermarkImage';
 
 function App() {
   return (
@@ -75,6 +76,14 @@ function App() {
           element={
             <Layout>
               <RemoveBackground />
+            </Layout>
+          }
+        />
+        <Route
+          path="/watermark-image"
+          element={
+            <Layout>
+              <WatermarkImage />
             </Layout>
           }
         />

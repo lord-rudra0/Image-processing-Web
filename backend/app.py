@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from PIL import Image, UnidentifiedImageError
+from PIL import Image, UnidentifiedImageError, ImageEnhance
 import cv2
 import numpy as np
 import io
@@ -108,6 +108,37 @@ def process_image(filename, operation, **kwargs):
             img = remove(img)
             img_io = io.BytesIO()
             img.save(img_io, 'PNG')  # Save as PNG to preserve transparency
+            compressed_size = img_io.tell()
+            img_io.seek(0)
+            img_base64 = base64.b64encode(img_io.read()).decode('utf-8')
+        elif operation == 'watermark':
+            watermark_filename = kwargs.get('watermark_filename')
+            position = kwargs.get('position', 'bottom_right')
+            opacity = kwargs.get('opacity', 0.5)
+
+            watermark_path = os.path.join(app.config['UPLOAD_FOLDER'], watermark_filename)
+            watermark = Image.open(watermark_path).convert("RGBA")
+
+            # Calculate position
+            if position == 'top_left':
+                position = (0, 0)
+            elif position == 'top_right':
+                position = (img.width - watermark.width, 0)
+            elif position == 'bottom_left':
+                position = (0, img.height - watermark.height)
+            else:  # bottom_right
+                position = (img.width - watermark.width, img.height - watermark.height)
+
+            # Adjust opacity
+            alpha = watermark.split()[3]
+            alpha = ImageEnhance.Brightness(alpha).enhance(opacity)
+            watermark.putalpha(alpha)
+
+            # Apply watermark
+            img.paste(watermark, position, watermark)
+
+            img_io = io.BytesIO()
+            img.save(img_io, img_format)
             compressed_size = img_io.tell()
             img_io.seek(0)
             img_base64 = base64.b64encode(img_io.read()).decode('utf-8')
@@ -378,6 +409,28 @@ def remove_background():
         filename = data['filename']
 
         result = process_image(filename, 'remove-background')
+        return result
+
+    except KeyError as e:
+        return jsonify({'success': False, 'error': f'Missing parameter: {str(e)}'}), 400
+    except FileNotFoundError:
+        return jsonify({'success': False, 'error': 'Image not found'}), 404
+    except ValueError as e:
+        return jsonify({'success': False, 'error': str(e)}), 400
+    except Exception as e:
+        print(e)
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/watermark', methods=['POST'])
+def add_watermark():
+    try:
+        data = request.get_json()
+        filename = data['filename']
+        watermark_filename = data['watermark_filename']
+        position = data.get('position', 'bottom_right')
+        opacity = float(data.get('opacity', 0.5))
+
+        result = process_image(filename, 'watermark', watermark_filename=watermark_filename, position=position, opacity=opacity)
         return result
 
     except KeyError as e:

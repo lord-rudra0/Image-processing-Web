@@ -21,8 +21,9 @@ export default function Navbar() {
         <Link to="/crop-image" className="hover:text-gray-200 transition-colors duration-200">CROP IMAGE</Link>
         <Link to="/convert-to-jpg" className="hover:text-gray-200 transition-colors duration-200">CONVERT TO JPG</Link>
         <Link to="/photo-editor" className="text-blue-500 hover:text-blue-400 transition-colors duration-200">PHOTO EDITOR</Link>
-        <Link to="/upscale-image" className="hover:text-gray-200 transition-colors duration-200">UPSCALE IMAGE</Link>
+        {/* <Link to="/upscale-image" className="hover:text-gray-200 transition-colors duration-200">UPSCALE IMAGE</Link>
         <Link to="/remove-background" className="hover:text-gray-200 transition-colors duration-200">REMOVE BACKGROUND</Link>
+        <Link to="/watermark-image" className="hover:text-gray-200 transition-colors duration-200">WATERMARK IMAGE</Link> */}
 
         {/* Dropdown */}
         <div className="relative">
@@ -38,29 +39,34 @@ export default function Navbar() {
                 <div>
                   <h4 className="font-semibold text-gray-200 mb-2">OPTIMIZE</h4>
                   <Link to="/compress-image" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Compress IMAGE</Link>
+                  <Link to="/upscale-image">
                   <a href="#" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Upscale</a>
+                  </Link>
+                   <Link to="/remove-background">
                   <a href="#" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Remove background</a>
+                  </Link>
                 </div>
                 <div>
                   <h4 className="font-semibold text-gray-200 mb-2">CREATE</h4>
-                  <a href="#" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Meme generator</a>
+                  {/* <a href="#" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Meme generator</a> */}
                   <Link to="/photo-editor" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Photo editor</Link>
                 </div>
                 <div>
                   <h4 className="font-semibold text-gray-200 mb-2">MODIFY</h4>
                   <Link to="/resize-image" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Resize IMAGE</Link>
                   <Link to="/crop-image" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Crop IMAGE</Link>
-                  <a href="#" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Rotate IMAGE</a>
+                  {/* <a href="#" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Rotate IMAGE</a> */}
                 </div>
                 <div>
                   <h4 className="font-semibold text-gray-200 mb-2">CONVERT</h4>
                   <Link to="/convert-to-jpg" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Convert to JPG</Link>
                   <a href="#" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Convert from JPG</a>
-                  <a href="#" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">HTML to IMAGE</a>
+                  {/* <a href="#" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">HTML to IMAGE</a> */}
                 </div>
                 <div>
                   <h4 className="font-semibold text-gray-200 mb-2">SECURITY</h4>
-                  <a href="#" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Watermark IMAGE</a>
+                  <Link to="/watermark-image"> <a href="#" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Watermark IMAGE</a>
+                  </Link>
                   <a href="#" className="block text-gray-400 hover:text-gray-300 transition-colors duration-200 py-1">Blur face</a>
                 </div>
               </div>
