@@ -113,21 +113,17 @@ def process_image(filename, operation, **kwargs):
             img_base64 = base64.b64encode(img_io.read()).decode('utf-8')
         elif operation == 'watermark':
             watermark_filename = kwargs.get('watermark_filename')
-            position = kwargs.get('position', 'bottom_right')
+            x = kwargs.get('x', 0)
+            y = kwargs.get('y', 0)
+            width = kwargs.get('width')
+            height = kwargs.get('height')
             opacity = kwargs.get('opacity', 0.5)
 
             watermark_path = os.path.join(app.config['UPLOAD_FOLDER'], watermark_filename)
             watermark = Image.open(watermark_path).convert("RGBA")
 
-            # Calculate position
-            if position == 'top_left':
-                position = (0, 0)
-            elif position == 'top_right':
-                position = (img.width - watermark.width, 0)
-            elif position == 'bottom_left':
-                position = (0, img.height - watermark.height)
-            else:  # bottom_right
-                position = (img.width - watermark.width, img.height - watermark.height)
+            # Resize watermark
+            watermark = watermark.resize((width, height))
 
             # Adjust opacity
             alpha = watermark.split()[3]
@@ -135,7 +131,7 @@ def process_image(filename, operation, **kwargs):
             watermark.putalpha(alpha)
 
             # Apply watermark
-            img.paste(watermark, position, watermark)
+            img.paste(watermark, (x, y), watermark)
 
             img_io = io.BytesIO()
             img.save(img_io, img_format)
@@ -427,10 +423,13 @@ def add_watermark():
         data = request.get_json()
         filename = data['filename']
         watermark_filename = data['watermark_filename']
-        position = data.get('position', 'bottom_right')
+        x = int(data.get('x', 0))
+        y = int(data.get('y', 0))
+        width = int(data['width'])
+        height = int(data['height'])
         opacity = float(data.get('opacity', 0.5))
 
-        result = process_image(filename, 'watermark', watermark_filename=watermark_filename, position=position, opacity=opacity)
+        result = process_image(filename, 'watermark', watermark_filename=watermark_filename, x=x, y=y, width=width, height=height, opacity=opacity)
         return result
 
     except KeyError as e:

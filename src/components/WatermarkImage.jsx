@@ -17,6 +17,10 @@ const WatermarkImage = () => {
     const [watermarkUploaded, setWatermarkUploaded] = useState(false);
     const [showImage, setShowImage] = useState(false);
     const imageRef = useRef(null);
+    const [x, setX] = useState(0);
+    const [y, setY] = useState(0);
+    const [width, setWidth] = useState(100);
+    const [height, setHeight] = useState(100);
 
     const onDrop = useCallback(async (acceptedFiles) => {
         const imageFile = acceptedFiles[0];
@@ -76,7 +80,10 @@ const WatermarkImage = () => {
                 body: JSON.stringify({
                     filename: filename,
                     watermark_filename: watermarkFilename,
-                    position: position,
+                    x: x,
+                    y: y,
+                    width: width,
+                    height: height,
                     opacity: opacity,
                 }),
             });
@@ -232,18 +239,50 @@ const WatermarkImage = () => {
                 <div className="w-1/2 p-4 flex flex-col justify-start">
                     <div className="mb-4">
                         <label className="block text-gray-300 text-sm font-bold mb-2">
-                            Position:
+                            X Coordinate:
                         </label>
-                        <select
-                            value={position}
-                            onChange={(e) => setPosition(e.target.value)}
+                        <input
+                            type="number"
+                            value={x}
+                            onChange={(e) => setX(parseInt(e.target.value))}
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
-                        >
-                            <option value="bottom_right">Bottom Right</option>
-                            <option value="bottom_left">Bottom Left</option>
-                            <option value="top_right">Top Right</option>
-                            <option value="top_left">Top Left</option>
-                        </select>
+                        />
+                    </div>
+
+                    <div className="mb-4">
+                        <label className="block text-gray-300 text-sm font-bold mb-2">
+                            Y Coordinate:
+                        </label>
+                        <input
+                            type="number"
+                            value={y}
+                            onChange={(e) => setY(parseInt(e.target.value))}
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
+                        />
+                    </div>
+
+                    <div className="mb-4">
+                        <label className="block text-gray-300 text-sm font-bold mb-2">
+                            Width:
+                        </label>
+                        <input
+                            type="number"
+                            value={width}
+                            onChange={(e) => setWidth(parseInt(e.target.value))}
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
+                        />
+                    </div>
+
+                    <div className="mb-4">
+                        <label className="block text-gray-300 text-sm font-bold mb-2">
+                            Height:
+                        </label>
+                        <input
+                            type="number"
+                            value={height}
+                            onChange={(e) => setHeight(parseInt(e.target.value))}
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
+                        />
                     </div>
 
                     <div className="mb-4">
