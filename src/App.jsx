@@ -11,10 +11,12 @@ import BlurFace from './components/BlurFace';
 import ImageEditor from './components/ImageEditor';
 import RemoveBackground from './components/RemoveBackground';
 import UpscaleImage from './components/UpscaleImage';
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <Layout>
         <div className="pt-20 min-h-screen">
           <Routes>
