@@ -54,11 +54,10 @@ const Footer = () => {
 
                     {/* Contact */}
                     <motion.div variants={itemVariants}>
-                        <h3 className="text-lg font-semibold text-white mb-4">Contact</h3>
-                        <ul className="space-y-2">
-                            <li className="text-gray-400">Email: support@iheartimg.com</li>
-                            <li className="text-gray-400">Phone: +1 (123) 456-7890</li>
-                        </ul>
+                        <h3 className="text-lg font-semibold text-white mb-4">Created by Me</h3>
+                        <p className="text-gray-400">
+                            Designed and developed by <a href="https://rudra-p-s-portfolio.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-white hover:text-blue-400 transition-colors">Rudra P S</a>.
+                        </p>
                     </motion.div>
 
                     {/* Social Media */}
