@@ -45,7 +45,7 @@ const Navbar = () => {
           <div className="flex items-center">
             <Link to="/" className="flex-shrink-0 group">
               <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent hover:from-purple-500 hover:to-blue-400 transition-all duration-500">
-                I❤IMG
+                VisionCraft❤
               </span>
             </Link>
           </div>
