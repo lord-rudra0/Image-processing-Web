@@ -58,11 +58,11 @@ const Home = () => {
             description: "Rotate images to any angle for proper orientation.",
             path: "/rotate-image"
         },
-        {
-            title: "Add Filters",
-            description: "Apply various artistic filters to enhance your images.",
-            path: "/add-filters"
-        }
+        // {
+        //     title: "Add Filters",
+        //     description: "Apply various artistic filters to enhance your images.",
+        //     path: "/add-filters"
+        // }
     ];
 
     return (

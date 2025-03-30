@@ -11,7 +11,8 @@ const Navbar = () => {
       links: [
         { name: "Compress IMAGE", path: "/compress-image" },
         { name: "Resize IMAGE", path: "/resize-image" },
-        { name: "Crop IMAGE", path: "/crop-image" }
+        { name: "Crop IMAGE", path: "/crop-image" },
+        { name: "Upscale IMAGE", path: "/upscale-image" }
       ]
     },
     { 
@@ -22,10 +23,17 @@ const Navbar = () => {
       ]
     },
     { 
+      title: "EDIT", 
+      links: [
+        { name: "Photo Editor", path: "/photo-editor" }
+      ]
+    },
+    { 
       title: "SECURITY", 
       links: [
         { name: "Watermark IMAGE", path: "/watermark-image" },
-        { name: "Blur Face", path: "/blur-face" }
+        { name: "Blur Face", path: "/blur-face" },
+        { name: "Remove Background", path: "/remove-background" }
       ]
     }
   ];
