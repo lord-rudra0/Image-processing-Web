@@ -8,6 +8,9 @@ import CropImage from './components/CropImage';
 import ConvertToJpg from './components/ConvertToJpg';
 import WatermarkImage from './components/WatermarkImage';
 import BlurFace from './components/BlurFace';
+import ImageEditor from './components/ImageEditor';
+import RemoveBackground from './components/RemoveBackground';
+import UpscaleImage from './components/UpscaleImage';
 
 function App() {
   return (
@@ -22,6 +25,9 @@ function App() {
             <Route path="/convert-to-jpg" element={<ConvertToJpg />} />
             <Route path="/watermark-image" element={<WatermarkImage />} />
             <Route path="/blur-face" element={<BlurFace />} />
+            <Route path="/photo-editor" element={<ImageEditor />} />
+            <Route path="/remove-background" element={<RemoveBackground />} />
+            <Route path="/upscale-image" element={<UpscaleImage />} />
           </Routes>
         </div>
       </Layout>

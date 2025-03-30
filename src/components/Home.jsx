@@ -24,6 +24,16 @@ const Home = () => {
             path: "/convert-to-jpg"
         },
         {
+            title: "Convert from JPG",
+            description: "Convert JPG images to other formats like PNG, WEBP, etc.",
+            path: "/convert-from-jpg"
+        },
+        {
+            title: "Photo Editor",
+            description: "Edit and enhance your photos with various filters and adjustments.",
+            path: "/photo-editor"
+        },
+        {
             title: "Watermark Image",
             description: "Add text or image watermarks to protect your images.",
             path: "/watermark-image"
@@ -32,6 +42,26 @@ const Home = () => {
             title: "Blur Face",
             description: "Automatically detect and blur faces in images for privacy protection.",
             path: "/blur-face"
+        },
+        {
+            title: "Remove Background",
+            description: "Remove image backgrounds automatically with high accuracy.",
+            path: "/remove-background"
+        },
+        {
+            title: "Upscale Image",
+            description: "Increase image resolution without losing quality using AI technology.",
+            path: "/upscale-image"
+        },
+        {
+            title: "Rotate Image",
+            description: "Rotate images to any angle for proper orientation.",
+            path: "/rotate-image"
+        },
+        {
+            title: "Add Filters",
+            description: "Apply various artistic filters to enhance your images.",
+            path: "/add-filters"
         }
     ];
 
@@ -73,7 +103,7 @@ const Home = () => {
             {/* Features Section */}
             <div className="mb-16">
                 <h2 className="text-2xl font-bold text-white mb-8 text-center">Our Features</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {features.map((feature, index) => (
                         <Card
                             key={index}
