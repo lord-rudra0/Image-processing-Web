@@ -89,7 +89,7 @@ const Home = () => {
                 transition={{ duration: 0.8, ease: "easeOut" }}
                 className="text-center mb-20"
             >
-                <h1 className="text-4xl font-bold text-white mb-6">Welcome to I❤IMG</h1>
+                <h1 className="text-4xl font-bold text-white mb-6">Welcome to VisionCraft❤</h1>
                 <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-12">
                     Your all-in-one image processing solution. Optimize, convert, and edit images with ease.
                 </p>
