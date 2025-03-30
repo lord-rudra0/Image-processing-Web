@@ -38,11 +38,11 @@ const Home = () => {
             description: "Convert images from various formats to JPG. Maintains image quality.",
             path: "/convert-to-jpg"
         },
-        {
-            title: "Convert from JPG",
-            description: "Convert JPG images to other formats like PNG, WEBP, etc.",
-            path: "/convert-from-jpg"
-        },
+        // {
+        //     title: "Convert from JPG",
+        //     description: "Convert JPG images to other formats like PNG, WEBP, etc.",
+        //     path: "/convert-from-jpg"
+        // },
         {
             title: "Photo Editor",
             description: "Edit and enhance your photos with various filters and adjustments.",
@@ -50,7 +50,7 @@ const Home = () => {
         },
         {
             title: "Watermark Image",
-            description: "Add text or image watermarks to protect your images.",
+            description: "Add text or image watermarks to protect your images. You can choose the area for Watermark",
             path: "/watermark-image"
         },
         {
@@ -68,11 +68,11 @@ const Home = () => {
             description: "Increase image resolution without losing quality using AI technology.",
             path: "/upscale-image"
         },
-        {
-            title: "Rotate Image",
-            description: "Rotate images to any angle for proper orientation.",
-            path: "/rotate-image"
-        },
+        // {
+        //     title: "Rotate Image",
+        //     description: "Rotate images to any angle for proper orientation.",
+        //     path: "/rotate-image"
+        // },
         // {
         //     title: "Add Filters",
         //     description: "Apply various artistic filters to enhance your images.",
