@@ -101,7 +101,7 @@ const Home = () => {
                     transition={{ delay: 0.5, duration: 0.6 }}
                     className="bg-gray-800/50 rounded-xl p-8"
                 >
-                    <h2 className="text-2xl font-bold text-white mb-8">Why Choose I❤IMG?</h2>
+                    <h2 className="text-2xl font-bold text-white mb-8">Why Choose VisionCraft?</h2>
                     <motion.div
                         variants={containerVariants}
                         initial="hidden"

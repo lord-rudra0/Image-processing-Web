@@ -37,7 +37,7 @@ const Footer = () => {
                     <motion.div variants={itemVariants}>
                         <h3 className="text-lg font-semibold text-white mb-4">About Us</h3>
                         <p className="text-gray-400">
-                        VisionCraft❤ is your all-in-one image processing solution. Optimize, convert, and edit images with ease.
+                            VisionCraft❤ is your all-in-one image processing solution. Optimize, convert, and edit images with ease.
                         </p>
                     </motion.div>
 
@@ -54,9 +54,10 @@ const Footer = () => {
 
                     {/* Contact */}
                     <motion.div variants={itemVariants}>
-                        <h3 className="text-lg font-semibold text-white mb-4">Created by Me</h3>
+                        <h3 className="text-lg font-semibold text-white mb-4">Created by <a href="https://rudra-p-s-portfolio.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-blue hover:text-blue-400 transition-colors" style={{ color: 'red' }}>Rudra P S</a>.
+                        </h3>
                         <p className="text-gray-400">
-                            Designed and developed by <a href="https://rudra-p-s-portfolio.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-white hover:text-blue-400 transition-colors">Rudra P S</a>.
+                            Designed and developed by <a href="https://rudra-p-s-portfolio.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-blue hover:text-blue-400 transition-colors" style={{ color: 'red' }}>Rudra P S</a>.
                         </p>
                     </motion.div>
 
