@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'https://visioncraft-m0y6.onrender.com/api';
 
 // Generic function to handle API requests
 const handleRequest = async (url, method = 'GET', body = null) => {

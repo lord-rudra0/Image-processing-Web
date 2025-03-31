@@ -26,6 +26,11 @@ if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+
+@app.route("/")
+def hello():
+    return "Hello, VisionCraft❤!"
+
 def base64_to_image(base64_string):
     try:
         if 'data:image' in base64_string:
