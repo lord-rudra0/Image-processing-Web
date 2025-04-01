@@ -287,19 +287,21 @@ def test():
 
 @app.route('/upload', methods=['POST'])
 def upload_image():
-    if 'image' not in request.files:
-        return jsonify({'error': 'No image provided'}), 400
-
-    image = request.files['image']
-    if image.filename == '':
-        return jsonify({'error': 'No image selected'}), 400
-
     try:
-        img = Image.open(image)
-        filepath = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
-        img.save(filepath)
-        return jsonify({'message': 'Image uploaded successfully', 'filename': image.filename}), 200
+        if 'image' not in request.files:
+            return jsonify({'error': 'No image part'}), 400
+
+        image = request.files['image']
+        if image.filename == '':
+            return jsonify({'error': 'No selected image'}), 400
+
+        filename = image.filename
+        image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+        return jsonify({'filename': filename, 'message': 'Image uploaded successfully'}), 200
+
     except Exception as e:
+        print(e)
         return jsonify({'error': str(e)}), 500
 
 @app.route('/compress', methods=['POST'])
