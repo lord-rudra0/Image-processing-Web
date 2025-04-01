@@ -19,7 +19,7 @@ from skimage.transform import resize
 from rembg import remove
 
 app = Flask(__name__)
-CORS(app, resources={r"/api/*": {"origins": "*"}})
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 UPLOAD_FOLDER = 'uploads'
 if not os.path.exists(UPLOAD_FOLDER):
@@ -173,7 +173,7 @@ def process_image(filename, operation, **kwargs):
         print(f"Error processing image: {e}")
         return jsonify({'success': False, 'error': 'Image processing failed.'}), 500
 
-@app.route('/api/process', methods=['POST'])
+@app.route('/process', methods=['POST'])
 def process_image_route():
     try:
         data = request.json
@@ -228,7 +228,7 @@ def process_image_route():
             'message': str(e)
         }), 500
 
-@app.route('/api/filters', methods=['GET'])
+@app.route('/filters', methods=['GET'])
 def get_available_filters():
     return jsonify({
         'threshold': {
@@ -275,14 +275,14 @@ def get_available_filters():
         }
     })
 
-@app.route('/api/test', methods=['GET'])
+@app.route('/test', methods=['GET'])
 def test():
     return jsonify({
         'status': 'success',
         'message': 'Server is running'
     })
 
-@app.route('/api/upload', methods=['POST'])
+@app.route('/upload', methods=['POST'])
 def upload_image():
     if 'image' not in request.files:
         return jsonify({'error': 'No image provided'}), 400
@@ -299,7 +299,7 @@ def upload_image():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/api/compress', methods=['POST'])
+@app.route('/compress', methods=['POST'])
 def compress():
     try:
         data = request.get_json()
@@ -314,7 +314,7 @@ def compress():
         print(f"Error during compression: {e}")
         return jsonify({'success': False, 'error': 'Compression failed'}), 500
 
-@app.route('/api/resize', methods=['POST'])
+@app.route('/resize', methods=['POST'])
 def resize_image():
     try:
         data = request.get_json()
@@ -348,7 +348,7 @@ def resize_image():
         print(e)
         return jsonify({'success': False, 'error': str(e)}), 500
 
-@app.route('/api/crop', methods=['POST'])
+@app.route('/crop', methods=['POST'])
 def crop_image():
     try:
         data = request.get_json()
@@ -371,7 +371,7 @@ def crop_image():
         print(e)
         return jsonify({'success': False, 'error': str(e)}), 500
 
-@app.route('/api/convert-to-jpg', methods=['POST'])
+@app.route('/convert-to-jpg', methods=['POST'])
 def convert_to_jpg():
     try:
         data = request.get_json()
@@ -391,7 +391,7 @@ def convert_to_jpg():
         print(e)
         return jsonify({'error': str(e)}), 500
 
-@app.route('/api/upscale', methods=['POST'])
+@app.route('/upscale', methods=['POST'])
 def upscale_image():
     try:
         data = request.get_json()
@@ -411,7 +411,7 @@ def upscale_image():
         print(e)
         return jsonify({'success': False, 'error': str(e)}), 500
 
-@app.route('/api/remove-background', methods=['POST'])
+@app.route('/remove-background', methods=['POST'])
 def remove_background():
     try:
         data = request.get_json()
@@ -430,7 +430,7 @@ def remove_background():
         print(e)
         return jsonify({'success': False, 'error': str(e)}), 500
 
-@app.route('/api/watermark', methods=['POST'])
+@app.route('/watermark', methods=['POST'])
 def add_watermark():
     try:
         data = request.get_json()
@@ -455,7 +455,7 @@ def add_watermark():
         print(e)
         return jsonify({'success': False, 'error': str(e)}), 500
 
-@app.route('/api/blur-face', methods=['POST'])
+@app.route('/blur-face', methods=['POST'])
 def blur_face():
     try:
         data = request.get_json()
